@@ -7,6 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,7 +80,13 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return BottomSheetWidget(size: size);
+                          });
+                    },
                     icon: Icon(
                       Bootstrap.clock,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -103,6 +110,96 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BottomSheetWidget extends StatelessWidget {
+
+  final size;
+  const BottomSheetWidget({super.key, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: size.height / 3,
+      width: size.width,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: ListView(
+              children: const [
+                ListTile(
+                  title: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text("100+204+105+30+195"),
+                  ),
+                  subtitle: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "634",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 110, right: 20),
+                  child: Divider(
+                    thickness: 2,
+                  ),
+                ),
+                ListTile(
+                  title: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text("100+204+105+30+195"),
+                  ),
+                  subtitle: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "634",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 110, right: 20),
+                  child: Divider(
+                    thickness: 2,
+                  ),
+                ),
+                ListTile(
+                  title: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text("100+204+105+30+195"),
+                  ),
+                  subtitle: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "634",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: IconButton(
+              icon: const Icon(Icons.delete_outline, size: 30),
+              onPressed: () {},
+            ),
+          ),
+        ],
       ),
     );
   }
