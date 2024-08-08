@@ -368,11 +368,11 @@ class SciButtonsWidget extends StatelessWidget {
             ),
             FilledButtonTonalWidget(
               func: () {},
-              child: Text("^", style: TextStyle(fontSize: 16.sp)),
+              child: const SpecialFilledTextWidget(text: "^"),
             ),
             FilledButtonTonalWidget(
               func: () {},
-              child: Text("( )", style: TextStyle(fontSize: 16.sp)),
+              child: const SpecialFilledTextWidget(text: "( )"),
             ),
           ],
         ),
@@ -480,7 +480,7 @@ class SpecialFilledTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(fontSize: 16.sp));
+    return Text(text, style: TextStyle(fontSize: 13.sp));
   }
 }
 

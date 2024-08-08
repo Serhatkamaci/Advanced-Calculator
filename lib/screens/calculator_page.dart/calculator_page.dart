@@ -14,6 +14,7 @@ class CalculatorPage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false, 
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
@@ -28,7 +29,7 @@ class CalculatorPage extends StatelessWidget {
               onPressed: () {},
               child: Text(
                 "Calculator",
-                style: TextStyle(fontSize: 14.sp),
+                style: TextStyle(fontSize: 12.sp),
                 maxLines: 1,
               ),
             ),
@@ -39,7 +40,7 @@ class CalculatorPage extends StatelessWidget {
               },
               child: Text(
                 "Graph",
-                style: TextStyle(fontSize: 14.sp),
+                style: TextStyle(fontSize: 12.sp),
                 maxLines: 1,
               ),
             ),

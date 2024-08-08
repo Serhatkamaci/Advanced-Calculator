@@ -10,6 +10,7 @@ class GraphPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         leading: const SizedBox(),
@@ -23,7 +24,7 @@ class GraphPage extends StatelessWidget {
               },
               child: Text(
                 "Calculator",
-                style: TextStyle(fontSize: 14.sp),
+                style: TextStyle(fontSize: 12.sp),
                 maxLines: 1,
               ),
             ),
@@ -32,7 +33,7 @@ class GraphPage extends StatelessWidget {
               onPressed: () {},
               child: Text(
                 "Graph",
-                style: TextStyle(fontSize: 14.sp),
+                style: TextStyle(fontSize: 12.sp),
                 maxLines: 1,
               ),
             ),

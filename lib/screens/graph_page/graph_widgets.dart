@@ -11,6 +11,7 @@ class FunctionTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      
       decoration: InputDecoration(
         suffixIcon: Icon(FontAwesome.circle_xmark, size: 24.sp),
         enabledBorder: MyButtonTheme.enabledFuncBorder(context),
