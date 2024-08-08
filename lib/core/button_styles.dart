@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MyButtonTheme {
   static ButtonStyle appBarButtonTheme(Size size) {
     return FilledButton.styleFrom(
+      padding: const EdgeInsets.all(0),
       fixedSize: Size.fromWidth(size.width / 4),
     );
   }
@@ -22,6 +23,7 @@ class MyButtonTheme {
 
   static ButtonStyle filledTonalButtonTheme(Size size, bool isBigButton) {
     return FilledButton.styleFrom(
+      padding: const EdgeInsets.all(0),
       fixedSize: isBigButton
           ? Size(size.width / 6, size.height / 12.5)
           : Size.fromWidth((size.width - 56) / 5),

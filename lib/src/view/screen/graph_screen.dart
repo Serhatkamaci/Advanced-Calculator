@@ -1,7 +1,6 @@
 import 'package:advanced_calculator/core/button_styles.dart';
-import 'package:advanced_calculator/screens/graph_page/graph_widgets.dart';
+import 'package:advanced_calculator/src/view/widget/graph_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GraphPage extends StatelessWidget {
   const GraphPage({super.key});
@@ -22,27 +21,30 @@ class GraphPage extends StatelessWidget {
               onPressed: () {
                 Navigator.popAndPushNamed(context, "/");
               },
-              child: Text(
+              child: const Text(
                 "Calculator",
-                style: TextStyle(fontSize: 12.sp),
+                style: TextStyle(fontSize: 12),
                 maxLines: 1,
               ),
             ),
             FilledButton(
               style: MyButtonTheme.appBarButtonTheme(size),
               onPressed: () {},
-              child: Text(
+              child: const Text(
                 "Graph",
-                style: TextStyle(fontSize: 12.sp),
+                style: TextStyle(fontSize: 12),
                 maxLines: 1,
               ),
             ),
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.dark_mode_outlined, size: 24.sp),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.dark_mode_outlined, size: 24),
+            ),
           ),
         ],
       ),

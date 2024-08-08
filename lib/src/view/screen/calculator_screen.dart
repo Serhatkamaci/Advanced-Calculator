@@ -1,7 +1,7 @@
 import 'package:advanced_calculator/core/button_styles.dart';
-import 'package:advanced_calculator/screens/calculator_page.dart/calculator_widgets.dart';
+import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
+import 'package:eval_ex/expression.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 bool mode = false;
@@ -11,15 +11,19 @@ class CalculatorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    String ifade = "2 \u002B 4 \u00D7 8";
+    String yeniIfade =
+        ifade.replaceAll("\u002B", "+").replaceAll("\u00D7", "*");
+    Expression exp = Expression(yeniIfade);
 
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
-          icon: Icon(FontAwesome.vial_solid, size: 16.sp),
+          icon: const Icon(FontAwesome.vial_solid, size: 16),
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -27,9 +31,9 @@ class CalculatorPage extends StatelessWidget {
             FilledButton(
               style: MyButtonTheme.appBarButtonTheme(size),
               onPressed: () {},
-              child: Text(
+              child: const Text(
                 "Calculator",
-                style: TextStyle(fontSize: 12.sp),
+                style: TextStyle(fontSize: 12),
                 maxLines: 1,
               ),
             ),
@@ -38,18 +42,21 @@ class CalculatorPage extends StatelessWidget {
               onPressed: () {
                 Navigator.popAndPushNamed(context, "/graph");
               },
-              child: Text(
+              child: const Text(
                 "Graph",
-                style: TextStyle(fontSize: 12.sp),
+                style: TextStyle(fontSize: 12),
                 maxLines: 1,
               ),
             ),
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.dark_mode_outlined, size: 24.sp),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.dark_mode_outlined, size: 24),
+            ),
           ),
         ],
       ),
@@ -67,7 +74,9 @@ class CalculatorPage extends StatelessWidget {
             ),
             SizedBox(
               width: size.width,
-              child: const ResultTextWidget(text: "634"),
+              child: ResultTextWidget(
+                text: exp.eval().toString(),
+              ),
             ),
             IconButton(
               onPressed: () {
@@ -79,7 +88,7 @@ class CalculatorPage extends StatelessWidget {
                   },
                 );
               },
-              icon: Icon(FontAwesome.clock, size: 20.sp),
+              icon: const Icon(FontAwesome.clock, size: 20),
             ),
             Divider(
               thickness: 2.0,

@@ -1,7 +1,6 @@
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:advanced_calculator/core/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 //? Texts
@@ -36,7 +35,7 @@ class ResultTextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: 56.sp),
+      style: const TextStyle(fontSize: 56),
       maxLines: 1,
       overflow: TextOverflow.clip,
       textAlign: TextAlign.end,
@@ -133,9 +132,9 @@ class BasicButtonsWidget extends StatelessWidget {
             FilledButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text(
+              child: const Text(
                 "C",
-                style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
             FilledButtonWidget(
@@ -161,17 +160,17 @@ class BasicButtonsWidget extends StatelessWidget {
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("7", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("7", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("8", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("8", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("9", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("9", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
               func: () {},
@@ -186,17 +185,17 @@ class BasicButtonsWidget extends StatelessWidget {
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("4", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("4", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("5", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("5", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("6", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("6", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
               func: () {},
@@ -211,17 +210,17 @@ class BasicButtonsWidget extends StatelessWidget {
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("1", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("1", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("2", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("2", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("3", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("3", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
               func: () {},
@@ -241,12 +240,12 @@ class BasicButtonsWidget extends StatelessWidget {
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text("0", style: TextStyle(fontSize: 28.sp)),
+              child: const Text("0", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {},
               isBigButton: true,
-              child: Text(",", style: TextStyle(fontSize: 28.sp)),
+              child: const Text(",", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonWidget(
               func: () {},
@@ -275,9 +274,9 @@ class SciButtonsWidget extends StatelessWidget {
           children: [
             FilledButtonWidget(
               func: () {},
-              child: Text(
+              child: const Text(
                 "C",
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             FilledButtonWidget(
@@ -397,7 +396,7 @@ class SciButtonsWidget extends StatelessWidget {
             ),
             FilledButtonTonalWidget(
               func: () {},
-              child: const Icon(FontAwesome.right_left_solid, size: 16),
+              child: const Icon(FontAwesome.right_left_solid, size: 14),
             ),
           ],
         ),
@@ -466,7 +465,7 @@ class SpecialTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(fontSize: 24.sp));
+    return Text(text, style: const TextStyle(fontSize: 24));
   }
 }
 
@@ -480,7 +479,7 @@ class SpecialFilledTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(fontSize: 13.sp));
+    return Text(text, style: const TextStyle(fontSize: 16));
   }
 }
 
