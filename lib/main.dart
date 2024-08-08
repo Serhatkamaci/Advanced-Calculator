@@ -1,6 +1,7 @@
 import 'package:advanced_calculator/core/theme.dart';
 import 'package:advanced_calculator/src/view/screen/graph_screen.dart';
 import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
+import 'package:advanced_calculator/src/view/widget/graph_widgets.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               switch (settings.name) {
-            '/' => const CalculatorPage(),
+            '/' => const GraphPage2(function: "CSC(x)"),
             '/graph' => const GraphPage(),
             _ => Container(),
           },

@@ -1,21 +1,21 @@
 import 'package:advanced_calculator/core/button_styles.dart';
+import 'package:advanced_calculator/src/model/unique_converter.dart';
 import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
-import 'package:eval_ex/expression.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 bool mode = false;
+String sentToUniqueConverter = ""; //? Arkaplanda tutulacak
+String processString = "";
+String resultString = "";
+Map<String, String> pastProcess = {};
+int parenthesisNumber=0;
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    String ifade = "2 \u002B 4 \u00D7 8";
-    String yeniIfade =
-        ifade.replaceAll("\u002B", "+").replaceAll("\u00D7", "*");
-    Expression exp = Expression(yeniIfade);
-
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -70,12 +70,13 @@ class CalculatorPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(bottom: 12),
               width: size.width,
-              child: const ProcessTextWidget(text: "100+204+105+30+195"),
+              child: const ProcessTextWidget(text: "2\u00F73\u00B2"),
             ),
             SizedBox(
               width: size.width,
               child: ResultTextWidget(
-                text: exp.eval().toString(),
+                text: UniqueConverter.resultString(
+                    UniqueConverter.convertString("2\u00F73wğ\u00B2ü")),
               ),
             ),
             IconButton(

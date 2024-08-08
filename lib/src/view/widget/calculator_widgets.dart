@@ -1,5 +1,6 @@
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:advanced_calculator/core/text_styles.dart';
+import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -346,7 +347,7 @@ class SciButtonsWidget extends StatelessWidget {
             ),
             FilledButtonTonalWidget(
               func: () {},
-              child: const Icon(FontAwesome.superscript_solid, size: 16),
+              child: const SpecialFilledTextWidget(text: "x\u00B2"),
             ),
           ],
         ),
@@ -483,8 +484,6 @@ class SpecialFilledTextWidget extends StatelessWidget {
   }
 }
 
-//? Bottom Sheet
-//! DÜZENLENECEK
 class BottomSheetWidget extends StatelessWidget {
   final Size size;
   const BottomSheetWidget({super.key, required this.size});
@@ -496,87 +495,14 @@ class BottomSheetWidget extends StatelessWidget {
       width: size.width,
       child: Stack(
         children: [
-          ListView(
-            children: const [
-              ListTile(
-                title: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("100+204+105+30+195"),
-                ),
-                subtitle: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "634",
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 110, right: 20),
-                child: Divider(
-                  thickness: 2,
-                ),
-              ),
-              ListTile(
-                title: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("100+204+105+30+195"),
-                ),
-                subtitle: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "634",
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 110, right: 20),
-                child: Divider(
-                  thickness: 2,
-                ),
-              ),
-              ListTile(
-                title: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("100+204+105+30+195"),
-                ),
-                subtitle: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "634",
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 110, right: 20),
-                child: Divider(
-                  thickness: 2,
-                ),
-              ),
-              ListTile(
-                title: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("100+204+105+30+195"),
-                ),
-                subtitle: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "634",
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          ListView.builder(
+            itemCount: pastProcess.length,
+            itemBuilder: (context, index) {
+              return PastItemWidget(
+                proces: pastProcess.keys.toList()[index],
+                result: pastProcess.values.toList()[index],
+              );
+            },
           ),
           Positioned(
             bottom: 16,
@@ -588,6 +514,51 @@ class BottomSheetWidget extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PastItemWidget extends StatelessWidget {
+  final String proces;
+  final String result;
+
+  const PastItemWidget({
+    super.key,
+    required this.proces,
+    required this.result,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              proces,
+              textAlign: TextAlign.right,
+            ),
+          ),
+          subtitle: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              result,
+              style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 110, right: 20),
+          child: Divider(
+            thickness: 2,
+          ),
+        ),
+      ],
     );
   }
 }
