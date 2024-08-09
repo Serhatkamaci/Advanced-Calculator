@@ -21,8 +21,15 @@ class MyButtonTheme {
     );
   }
 
-  static ButtonStyle filledTonalButtonTheme(Size size, bool isBigButton) {
+  static ButtonStyle filledTonalButtonTheme(
+    Size size,
+    BuildContext context,
+    bool isBigButton,
+    bool isSelected,
+  ) {
     return FilledButton.styleFrom(
+      backgroundColor:
+          isSelected ? Theme.of(context).colorScheme.secondary : null,
       padding: const EdgeInsets.all(0),
       fixedSize: isBigButton
           ? Size(size.width / 6, size.height / 12.5)

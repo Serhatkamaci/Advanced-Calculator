@@ -48,11 +48,14 @@ class GraphPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Column(
+      body: const Stack(
         children: [
           Padding(
             padding: EdgeInsets.only(left: 16, right: 16, top: 20),
             child: FunctionTextField(),
+          ),
+          GraphWidget(
+            function: "2*x",
           ),
         ],
       ),

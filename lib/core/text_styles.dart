@@ -8,4 +8,11 @@ class MyTextTheme {
       color: Theme.of(context).colorScheme.secondary,
     );
   }
+
+  static TextStyle modalBottomSheetStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: 20,
+      color: Theme.of(context).colorScheme.secondary,
+    );
+  }
 }

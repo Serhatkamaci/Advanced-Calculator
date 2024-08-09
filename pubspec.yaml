@@ -38,9 +38,8 @@ dependencies:
   icons_plus: ^5.0.0
   device_preview: ^1.2.0
   eval_ex: ^1.1.8
-  math_expressions: ^2.6.0
   syncfusion_flutter_charts: ^26.2.8
-  provider:
+  flutter_riverpod: ^2.5.1
 
 
 dev_dependencies:
