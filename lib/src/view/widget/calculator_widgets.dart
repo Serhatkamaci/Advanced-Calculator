@@ -1,8 +1,11 @@
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:advanced_calculator/core/text_styles.dart';
+import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
+import 'package:advanced_calculator/src/business_logic/result_provider.dart';
 import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:provider/provider.dart';
 
 //? Texts
 
@@ -144,7 +147,8 @@ class BasicButtonsWidget extends StatelessWidget {
               child: const Icon(FontAwesome.left_long_solid, size: 16),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.percent_solid, size: 20),
             ),
@@ -261,6 +265,8 @@ class BasicButtonsWidget extends StatelessWidget {
 }
 
 class SciButtonsWidget extends StatelessWidget {
+
+
   const SciButtonsWidget({
     super.key,
   });
@@ -274,26 +280,41 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("C");
+                context.read<ResultProvider>().addtoProcess("C");
+              },
               child: const Text(
                 "C",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             FilledButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("<-");
+                context.read<ResultProvider>().addtoProcess("<-");
+              },
               child: const Icon(FontAwesome.left_long_solid, size: 16),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u0025");
+                context.read<ResultProvider>().addtoProcess("\u0025");
+              },
               child: const Icon(FontAwesome.percent_solid, size: 16),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u00F7");
+                context.read<ResultProvider>().addtoProcess("\u00F7");
+              },
               child: const Icon(FontAwesome.divide_solid, size: 16),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u00D7");
+                context.read<ResultProvider>().addtoProcess("\u00D7");
+              },
               child: const Icon(FontAwesome.xmark_solid, size: 16),
             ),
           ],
@@ -302,23 +323,38 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("7");
+                context.read<ResultProvider>().addtoProcess("7");
+              },
               child: const SpecialTextWidget(text: "7"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("8");
+                context.read<ResultProvider>().addtoProcess("8");
+              },
               child: const SpecialTextWidget(text: "8"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("9");
+                context.read<ResultProvider>().addtoProcess("9");
+              },
               child: const SpecialTextWidget(text: "9"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u2212");
+                context.read<ResultProvider>().addtoProcess("\u2212");
+              },
               child: const Icon(FontAwesome.minus_solid, size: 16),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u002B");
+                context.read<ResultProvider>().addtoProcess("\u002B");
+              },
               child: const Icon(FontAwesome.plus_solid, size: 16),
             ),
           ],
@@ -327,26 +363,41 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("4");
+                context.read<ResultProvider>().addtoProcess("4");
+              },
               child: const SpecialTextWidget(text: "4"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("5");
+                context.read<ResultProvider>().addtoProcess("5");
+              },
               child: const SpecialTextWidget(text: "5"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("6");
+                context.read<ResultProvider>().addtoProcess("6");
+              },
               child: const SpecialTextWidget(text: "6"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u221A");
+                context.read<ResultProvider>().addtoProcess("\u221A");
+              },
               child: const Icon(
                 FontAwesome.square_root_variable_solid,
                 size: 16,
               ),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("\u00B2");
+                context.read<ResultProvider>().addtoProcess("q");
+              },
               child: const SpecialFilledTextWidget(text: "x\u00B2"),
             ),
           ],
@@ -355,23 +406,35 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("1");
+                context.read<ResultProvider>().addtoProcess("1");
+              },
               child: const SpecialTextWidget(text: "1"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("2");
+                context.read<ResultProvider>().addtoProcess("2");
+              },
               child: const SpecialTextWidget(text: "2"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("3");
+                context.read<ResultProvider>().addtoProcess("3");
+              },
               child: const SpecialTextWidget(text: "3"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("^");
+                context.read<ResultProvider>().addtoProcess("w");
+              },
               child: const SpecialFilledTextWidget(text: "^"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {}, // Paranteze bakılacak
               child: const SpecialFilledTextWidget(text: "( )"),
             ),
           ],
@@ -380,19 +443,24 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {}, // Bakılacak
               child: const Icon(FontAwesome.plus_minus_solid, size: 16),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ProcessProvider>().addtoProcess("0");
+                context.read<ResultProvider>().addtoProcess("0");
+              },
               child: const SpecialTextWidget(text: "0"),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak. Virgül ile işlemi söyle
+                context.read<ProcessProvider>().addtoProcess(",");
+              },
               child: const SpecialTextWidget(text: ","),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {}, // Bakılacak
               child: const SpecialFilledTextWidget(text: "Rad"),
             ),
             FilledButtonTonalWidget(
@@ -405,23 +473,33 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButtonTonalWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("sin(");
+              },
               child: const SpecialFilledTextWidget(text: "sin"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("cos(");
+              },
               child: const SpecialFilledTextWidget(text: "cos"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("tan(");
+              },
               child: const SpecialFilledTextWidget(text: "tan"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {  // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("π");
+              },
               child: const SpecialFilledTextWidget(text: "π"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("e");
+              },
               child: const SpecialFilledTextWidget(text: "e"),
             ),
           ],
@@ -430,23 +508,29 @@ class SciButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButtonTonalWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("ln(");
+              },
               child: const SpecialFilledTextWidget(text: "ln"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () { // ResultProvider için bakılacak.
+                context.read<ProcessProvider>().addtoProcess("log(");
+              },
               child: const SpecialFilledTextWidget(text: "log"),
             ),
-            FilledButtonTonalWidget(
-              func: () {},
+            FilledButtonTonalWidget( // ResultProvider için bakılacak.
+              func: () {}, // Bakılacak
               child: const SpecialFilledTextWidget(text: "1/x"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {}, // Bakılacak. ResultProvider için bakılacak.
               child: const SpecialFilledTextWidget(text: "|x|"),
             ),
             FilledButtonWidget(
-              func: () {},
+              func: () {
+                context.read<ResultProvider>().addtoProcess("=");
+              },
               child: const Icon(FontAwesome.equals_solid, size: 16),
             ),
           ],

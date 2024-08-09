@@ -1,12 +1,15 @@
 import 'package:advanced_calculator/core/button_styles.dart';
+import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
+import 'package:advanced_calculator/src/business_logic/result_provider.dart';
 import 'package:advanced_calculator/src/model/unique_converter.dart';
 import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:provider/provider.dart';
 
 bool mode = false;
-String sentToUniqueConverter = ""; //? Arkaplanda tutulacak
-String processString = "";
+//String sentToUniqueConverter = ""; //? Arkaplanda tutulacak
+//String processString = "";
 String resultString = "";
 Map<String, String> pastProcess = {};
 int parenthesisNumber=0;
@@ -70,13 +73,21 @@ class CalculatorPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(bottom: 12),
               width: size.width,
-              child: const ProcessTextWidget(text: "2\u00F73\u00B2"),
+              child: Consumer<ProcessProvider>(
+                builder: (context, processProviderObject, child)
+                {
+                  return ProcessTextWidget(text: processProviderObject.readtoProcess()); // "2\u00D73\u00B2" Dinleyici
+                },
+                ), 
             ),
             SizedBox(
               width: size.width,
-              child: ResultTextWidget(
-                text: UniqueConverter.resultString(
-                    UniqueConverter.convertString("2\u00F73wğ\u00B2ü")),
+              child: Consumer<ResultProvider>(
+                builder: (context, resultProviderObject, child){
+                  return ResultTextWidget(
+                  text:   resultProviderObject.readtoProcessResult(),// "2\u00F73wğ\u00B2ü"
+                );
+                },
               ),
             ),
             IconButton(
