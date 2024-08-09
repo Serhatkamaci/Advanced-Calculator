@@ -1,6 +1,6 @@
 import 'package:advanced_calculator/core/theme.dart';
 import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
-import 'package:advanced_calculator/src/business_logic/result_provider.dart';
+import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
 import 'package:advanced_calculator/src/view/screen/graph_screen.dart';
 import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
 import 'package:advanced_calculator/src/view/widget/graph_widgets.dart';

@@ -1,7 +1,7 @@
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:advanced_calculator/core/text_styles.dart';
 import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
-import 'package:advanced_calculator/src/business_logic/result_provider.dart';
+import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
 import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
