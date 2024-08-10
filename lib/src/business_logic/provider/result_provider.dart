@@ -24,6 +24,7 @@ class Result extends ChangeNotifier {
   }
 
   void addtoProcess(String process) {
+    
     if (process == "wğ") {
       if (pastUniqueConverterList.last == "ü") {
         pastUniqueConverterList.removeLast();

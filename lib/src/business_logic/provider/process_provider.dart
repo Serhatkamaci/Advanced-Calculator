@@ -11,6 +11,7 @@ class Process extends ChangeNotifier {
   }
 
   void addtoProcess(String process) {
+
     if (process == "<-" &&
         !(copyPastUniqueConverterList.last == "wğ" ||
             copyPastUniqueConverterList.last == "ü")) {

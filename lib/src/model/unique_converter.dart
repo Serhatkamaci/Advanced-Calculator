@@ -22,9 +22,10 @@ class UniqueConverter {
     "\u221A(": "SQRT(",
     "log(": "LOG10(",
     "ln(": "LOG(",
-    "π": "PI",
+    "π": "Pİ",
     "w": "^",
     "q": "^(2)",
+    "e": "e",
   };
 
   static String convertString(String process) {

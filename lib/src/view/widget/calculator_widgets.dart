@@ -490,7 +490,7 @@ class SciButtonsWidget extends ConsumerWidget {
               ),
             ),
             FilledButtonTonalWidget(
-              func: () {}, // Paranteze bakılacak
+              func: () {},
               child: const SpecialFilledTextWidget(text: "( )"),
             ),
           ],
@@ -558,14 +558,14 @@ class SciButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
+                ref.read(resulProvider).addtoProcess("π");
                 ref.read(processProvider).addtoProcess("π");
               },
               child: const SpecialFilledTextWidget(text: "π"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
+                ref.read(resulProvider).addtoProcess("e");
                 ref.read(processProvider).addtoProcess("e");
               },
               child: const SpecialFilledTextWidget(text: "e"),
