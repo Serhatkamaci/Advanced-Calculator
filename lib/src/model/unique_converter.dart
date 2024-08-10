@@ -1,3 +1,6 @@
+// ignore_for_file: dead_code_catch_following_catch
+
+import 'package:advanced_calculator/src/model/exception.dart';
 import 'package:eval_ex/expression.dart';
 
 class UniqueConverter {
@@ -17,15 +20,24 @@ class UniqueConverter {
     "\u2077": "7",
     "\u2078": "8",
     "\u2079": "9",
+    "arcsin": "ASIN",
+    "arccos": "ACOS",
+    "arctan": "ATAN",
+    "sin": "SIN",
+    "cos": "COS",
+    "tan": "TAN",
+    "rad": "RAD",
     "ğ": "(",
     "ü": ")",
     "\u221A(": "SQRT(",
     "log(": "LOG10(",
     "ln(": "LOG(",
-    "π": "Pİ",
+    "abs(": "ABS(",
+    "π": "PI",
     "w": "^",
     "q": "^(2)",
     "e": "e",
+    ",": ".",
   };
 
   static String convertString(String process) {
@@ -37,7 +49,14 @@ class UniqueConverter {
   }
 
   static String resultString(String convertedProcess) {
-    Expression exp = Expression(convertedProcess);
-    return exp.eval().toString();
+    try{
+      Expression exp = Expression(convertedProcess);
+      return exp.eval().toString();
+    // ignore: non_constant_identifier_names
+    }on TrigonometricErrors catch(e){
+      return e.errorMessage;
+    }on ExpressionException catch(e){
+      return e.msg;
+    }
   }
 }

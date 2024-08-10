@@ -3,6 +3,8 @@ import 'package:advanced_calculator/core/text_styles.dart';
 import 'package:advanced_calculator/src/business_logic/provider/garbage_collactor_provider.dart';
 import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
 import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
+import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -16,12 +18,13 @@ class ProcessTextWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Text(
+    return AutoSizeText(
       ref.watch(processProvider).readtoProcess(),
       style: MyTextTheme.processStyle(context),
       textAlign: TextAlign.end,
       maxLines: 3,
-      overflow: TextOverflow.ellipsis,
+      minFontSize: 30,
+      maxFontSize: 44,
     );
   }
 }
@@ -33,10 +36,11 @@ class ResultTextWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Text(
+    return AutoSizeText(
       ref.watch(resulProvider).readtoProcessResult(),
       style: const TextStyle(fontSize: 56),
       maxLines: 1,
+      minFontSize: 30,
       overflow: TextOverflow.clip,
       textAlign: TextAlign.end,
     );
@@ -117,6 +121,68 @@ class TextButtonWidget extends StatelessWidget {
       style: MyButtonTheme.textButtonTheme(size, isBigButton),
       onPressed: func,
       child: child,
+    );
+  }
+}
+
+class ButtonsWidget extends ConsumerWidget {
+  const ButtonsWidget({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20),
+      height: size.height / 2,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: ref.watch(calculatorModeProvider)
+            ? const BasicButtonsWidget()
+            : const SciButtonsWidget(),
+      ),
+    );
+  }
+}
+
+class CalculatorModeButtonWidget extends ConsumerWidget {
+  const CalculatorModeButtonWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      onPressed: () {
+        ref.read(calculatorModeProvider.notifier).state =
+            !ref.watch(calculatorModeProvider);
+      },
+      icon: const Icon(FontAwesome.vial_solid, size: 16),
+    );
+  }
+}
+
+class ThemeModeButtonWidget extends ConsumerWidget {
+  const ThemeModeButtonWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: IconButton(
+        onPressed: () {
+          ref.read(themeModeProvider.notifier).state =
+              ref.watch(themeModeProvider) == ThemeMode.light
+                  ? ThemeMode.dark
+                  : ThemeMode.light;
+        },
+        icon: const Icon(Icons.dark_mode_outlined, size: 24),
+      ),
     );
   }
 }
@@ -267,6 +333,7 @@ class BasicButtonsWidget extends StatelessWidget {
 }
 
 final upButtonProvider = StateProvider((ref) => false);
+final changeButtonProvider = StateProvider((ref) => false);
 
 class SciButtonsWidget extends ConsumerWidget {
   const SciButtonsWidget({
@@ -421,6 +488,7 @@ class SciButtonsWidget extends ConsumerWidget {
               func: () {
                 ref.read(processProvider).addtoProcess("\u221A(");
                 ref.read(resulProvider).addtoProcess("\u221A(");
+                parenthesesCount++;
               },
               child: const Icon(
                 FontAwesome.square_root_variable_solid,
@@ -478,11 +546,13 @@ class SciButtonsWidget extends ConsumerWidget {
             FilledButtonTonalWidget(
               isSelected: ref.watch(upButtonProvider),
               func: () {
-                ref.read(upButtonProvider.notifier).state =
-                    !ref.watch(upButtonProvider);
-                ref.watch(upButtonProvider)
-                    ? ref.read(resulProvider).addtoProcess("wğ")
-                    : ref.read(resulProvider).addtoProcess("ü");
+                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
+                  ref.read(upButtonProvider.notifier).state =
+                      !ref.watch(upButtonProvider);
+                  ref.watch(upButtonProvider)
+                      ? ref.read(resulProvider).addtoProcess("wğ")
+                      : ref.read(resulProvider).addtoProcess("ü");
+                }
               },
               child: SpecialFilledTextWidget(
                 text: "^",
@@ -490,7 +560,10 @@ class SciButtonsWidget extends ConsumerWidget {
               ),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                ref.read(resulProvider).addtoProcess("()");
+                ref.read(processProvider).addtoProcess("()");
+              },
               child: const SpecialFilledTextWidget(text: "( )"),
             ),
           ],
@@ -499,7 +572,10 @@ class SciButtonsWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButtonTonalWidget(
-              func: () {}, // Bakılacak
+              func: () {
+                ref.read(resulProvider).addtoProcess("ö");
+                ref.read(resulProvider).addtoProcess("=");
+              },
               child: const Icon(FontAwesome.plus_minus_solid, size: 16),
             ),
             TextButtonWidget(
@@ -518,17 +594,32 @@ class SciButtonsWidget extends ConsumerWidget {
               func: () {
                 if (!ref.watch(upButtonProvider)) {
                   ref.read(processProvider).addtoProcess(",");
+                  ref.read(resulProvider).addtoProcess(",");
                 }
               },
               child: const SpecialTextWidget(text: ","),
             ),
             FilledButtonTonalWidget(
-              func: () {}, // Bakılacak
+              func: () {
+                ref.read(processProvider).addtoProcess("rad(");
+                ref.read(resulProvider).addtoProcess("rad(");
+                parenthesesCount++;
+              },
               child: const SpecialFilledTextWidget(text: "Rad"),
             ),
             FilledButtonTonalWidget(
-              func: () {},
-              child: const Icon(FontAwesome.right_left_solid, size: 14),
+              func: () {
+                ref.read(changeButtonProvider.notifier).state =
+                    !ref.watch(changeButtonProvider);
+              },
+              isSelected: ref.watch(changeButtonProvider),
+              child: Icon(
+                FontAwesome.right_left_solid,
+                size: 14,
+                color: ref.watch(changeButtonProvider)
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : null,
+              ),
             ),
           ],
         ),
@@ -537,24 +628,60 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
-                ref.read(processProvider).addtoProcess("sin(");
+                ref.watch(changeButtonProvider)
+                    ? {
+                        ref.read(processProvider).addtoProcess("arcsin("),
+                        ref.read(resulProvider).addtoProcess("arcsin("),
+                      }
+                    : {
+                        ref.read(processProvider).addtoProcess("sin("),
+                        ref.read(resulProvider).addtoProcess("sin("),
+                      };
+                parenthesesCount++;
               },
-              child: const SpecialFilledTextWidget(text: "sin"),
+              isSelected: ref.watch(changeButtonProvider),
+              child: SpecialFilledTextWidget(
+                text: "sin",
+                isSelected: ref.watch(changeButtonProvider),
+              ),
             ),
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
-                ref.read(processProvider).addtoProcess("cos(");
+                ref.watch(changeButtonProvider)
+                    ? {
+                        ref.read(processProvider).addtoProcess("arccos("),
+                        ref.read(resulProvider).addtoProcess("arccos(")
+                      }
+                    : {
+                        ref.read(processProvider).addtoProcess("cos("),
+                        ref.read(resulProvider).addtoProcess("cos(")
+                      };
+                parenthesesCount++;
               },
-              child: const SpecialFilledTextWidget(text: "cos"),
+              isSelected: ref.watch(changeButtonProvider),
+              child: SpecialFilledTextWidget(
+                text: "cos",
+                isSelected: ref.watch(changeButtonProvider),
+              ),
             ),
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
-                ref.read(processProvider).addtoProcess("tan(");
+                ref.watch(changeButtonProvider)
+                    ? {
+                        ref.read(processProvider).addtoProcess("arctan("),
+                        ref.read(resulProvider).addtoProcess("arctan("),
+                      }
+                    : {
+                        ref.read(processProvider).addtoProcess("tan("),
+                        ref.read(resulProvider).addtoProcess("tan("),
+                      };
+                parenthesesCount++;
               },
-              child: const SpecialFilledTextWidget(text: "tan"),
+              isSelected: ref.watch(changeButtonProvider),
+              child: SpecialFilledTextWidget(
+                text: "tan",
+                isSelected: ref.watch(changeButtonProvider),
+              ),
             ),
             FilledButtonTonalWidget(
               func: () {
@@ -577,25 +704,33 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
+                ref.read(resulProvider).addtoProcess("ln(");
                 ref.read(processProvider).addtoProcess("ln(");
+                parenthesesCount++;
               },
               child: const SpecialFilledTextWidget(text: "ln"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                // ResultProvider için bakılacak.
+                ref.read(resulProvider).addtoProcess("log(");
                 ref.read(processProvider).addtoProcess("log(");
+                parenthesesCount++;
               },
               child: const SpecialFilledTextWidget(text: "log"),
             ),
             FilledButtonTonalWidget(
-              // ResultProvider için bakılacak.
-              func: () {}, // Bakılacak
+              func: () {
+                ref.read(resulProvider).addtoProcess("1/x");
+                ref.read(processProvider).addtoProcess("1/x");
+              },
               child: const SpecialFilledTextWidget(text: "1/x"),
             ),
             FilledButtonTonalWidget(
-              func: () {}, // Bakılacak. ResultProvider için bakılacak.
+              func: () {
+                ref.read(resulProvider).addtoProcess("abs(");
+                ref.read(processProvider).addtoProcess("abs(");
+                parenthesesCount++;
+              },
               child: const SpecialFilledTextWidget(text: "|x|"),
             ),
             FilledButtonWidget(
@@ -605,6 +740,19 @@ class SciButtonsWidget extends ConsumerWidget {
                     SnackBar(
                       content: const Text(
                         "You haven't finished the up process!",
+                        textAlign: TextAlign.center,
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                  );
+                } else if (parenthesesCount != 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                        "There is a parenthesis error!",
                         textAlign: TextAlign.center,
                       ),
                       behavior: SnackBarBehavior.floating,

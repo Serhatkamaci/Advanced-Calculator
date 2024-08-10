@@ -24,8 +24,19 @@ class Result extends ChangeNotifier {
   }
 
   void addtoProcess(String process) {
-    
-    if (process == "wğ") {
+    if (process == "()") {
+      if (pastUniqueConverterList.isEmpty ||
+          (int.tryParse(pastUniqueConverterList.last) == null &&
+              pastUniqueConverterList.last != ")")) {
+        pastUniqueConverterList.add("(");
+        senttoUniqueConverter += "(";
+      } else if (parenthesesCount != 0 && pastUniqueConverterList.last != "(") {
+        pastUniqueConverterList.add(")");
+        senttoUniqueConverter += ")";
+      }
+    } else if (process == "ö") {
+      senttoUniqueConverter = "-$senttoUniqueConverter";
+    } else if (process == "wğ") {
       if (pastUniqueConverterList.last == "ü") {
         pastUniqueConverterList.removeLast();
         int index = senttoUniqueConverter.lastIndexOf("ü");
@@ -67,6 +78,12 @@ class Result extends ChangeNotifier {
       processProvider.procesString = showtoScreenResultValue;
       processProvider.pastProcessList = showtoScreenResultValue.split('');
       senttoUniqueConverter = showtoScreenResultValue;
+    } else if (process == "1/x" && senttoUniqueConverter.isNotEmpty) {
+      copyPastUniqueConverterList.insertAll(0, ["1", "/", "("]);
+      copyPastUniqueConverterList.add(")");
+      pastUniqueConverterList.insertAll(0, ["1", "/", "("]);
+      pastUniqueConverterList.add(")");
+      senttoUniqueConverter = "1/($senttoUniqueConverter)";
     } else if (process == "C") {
       upButtonProvider.state = false;
       senttoUniqueConverter = "";
@@ -83,6 +100,10 @@ class Result extends ChangeNotifier {
   void resultProcess() {
     showtoScreenResultValue = UniqueConverter.resultString(
         UniqueConverter.convertString(senttoUniqueConverter));
+
+    if (int.tryParse(showtoScreenResultValue) == null) {
+      showtoScreenResultValue = "0";
+    }
   }
 }
 

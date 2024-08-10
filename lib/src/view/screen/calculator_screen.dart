@@ -1,9 +1,11 @@
 import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-bool mode = false;
+final calculatorModeProvider = StateProvider((ref) => true);
+final themeModeProvider = StateProvider((ref) => ThemeMode.system);
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
@@ -15,10 +17,7 @@ class CalculatorPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(FontAwesome.vial_solid, size: 16),
-        ),
+        leading: const CalculatorModeButtonWidget(),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -44,14 +43,8 @@ class CalculatorPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.dark_mode_outlined, size: 24),
-            ),
-          ),
+        actions: const [
+          ThemeModeButtonWidget(),
         ],
       ),
       body: Container(
@@ -86,12 +79,7 @@ class CalculatorPage extends StatelessWidget {
               thickness: 2.0,
               color: Theme.of(context).colorScheme.outlineVariant,
             ),
-            Container(
-              padding: const EdgeInsets.only(top: 20),
-              height: size.height / 2,
-              child:
-                  mode ? const BasicButtonsWidget() : const SciButtonsWidget(),
-            ),
+            ButtonsWidget(size: size),
           ],
         ),
       ),
