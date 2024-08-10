@@ -13,6 +13,7 @@ class Process extends ChangeNotifier {
   }
 
   void addtoProcess(String process) {
+
     if (process == "<-" &&
         !(copyPastUniqueConverterList.last == "wğ" ||
             copyPastUniqueConverterList.last == "ü")) {
@@ -21,6 +22,7 @@ class Process extends ChangeNotifier {
         pastProcessList.removeLast();
         int index = procesString.lastIndexOf(lastElement);
         procesString = procesString.substring(0, index);
+        parenthesesCount+=1;
       } else {
         procesString = "";
       }
@@ -43,6 +45,7 @@ class Process extends ChangeNotifier {
     } else if (process == "C") {
       procesString = "";
       pastProcessList = [];
+      parenthesesCount=0;
     } else if (process != "<-") {
       pastProcessList.add(process);
       procesString += process;

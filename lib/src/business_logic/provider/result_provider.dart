@@ -24,6 +24,7 @@ class Result extends ChangeNotifier {
   }
 
   void addtoProcess(String process) {
+
     if (process == "()") {
       if (pastUniqueConverterList.isEmpty ||
           (int.tryParse(pastUniqueConverterList.last) == null &&
@@ -73,11 +74,23 @@ class Result extends ChangeNotifier {
         processProvider.procesString,
         showtoScreenResultValue,
       );
-      copyPastUniqueConverterList = showtoScreenResultValue.split('');
-      pastUniqueConverterList = showtoScreenResultValue.split('');
-      processProvider.procesString = showtoScreenResultValue;
-      processProvider.pastProcessList = showtoScreenResultValue.split('');
-      senttoUniqueConverter = showtoScreenResultValue;
+      if(int.tryParse(showtoScreenResultValue)!=null)
+      {
+        copyPastUniqueConverterList = showtoScreenResultValue.split('');
+        pastUniqueConverterList = showtoScreenResultValue.split('');
+        processProvider.procesString = showtoScreenResultValue;
+        processProvider.pastProcessList = showtoScreenResultValue.split('');
+        senttoUniqueConverter = showtoScreenResultValue;
+      }
+      else
+      {
+        copyPastUniqueConverterList=[];
+        pastUniqueConverterList=[];
+        processProvider.procesString="";
+        processProvider.pastProcessList=[];
+        senttoUniqueConverter="";
+
+      }
     } else if (process == "1/x" && senttoUniqueConverter.isNotEmpty) {
       copyPastUniqueConverterList.insertAll(0, ["1", "/", "("]);
       copyPastUniqueConverterList.add(")");
@@ -100,10 +113,6 @@ class Result extends ChangeNotifier {
   void resultProcess() {
     showtoScreenResultValue = UniqueConverter.resultString(
         UniqueConverter.convertString(senttoUniqueConverter));
-
-    if (int.tryParse(showtoScreenResultValue) == null) {
-      showtoScreenResultValue = "0";
-    }
   }
 }
 

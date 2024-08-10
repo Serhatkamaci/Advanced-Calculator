@@ -54,9 +54,13 @@ class UniqueConverter {
       return exp.eval().toString();
     // ignore: non_constant_identifier_names
     }on TrigonometricErrors catch(e){
+      print("Trigonometrik hata");
       return e.errorMessage;
     }on ExpressionException catch(e){
       return e.msg;
+    } on Exception
+    {
+      return "Invalid value";
     }
   }
 }

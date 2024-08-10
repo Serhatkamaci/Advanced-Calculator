@@ -187,15 +187,14 @@ class ThemeModeButtonWidget extends ConsumerWidget {
   }
 }
 
-//? Lists
 
-class BasicButtonsWidget extends StatelessWidget {
+class BasicButtonsWidget extends ConsumerWidget {
   const BasicButtonsWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -203,7 +202,10 @@ class BasicButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilledButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("C");
+                ref.read(resulProvider).addtoProcess("C");
+              },
               isBigButton: true,
               child: const Text(
                 "C",
@@ -211,17 +213,28 @@ class BasicButtonsWidget extends StatelessWidget {
               ),
             ),
             FilledButtonWidget(
-              func: () {},
+              func: () {
+                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
+                  ref.read(processProvider).addtoProcess("<-");
+                  ref.read(resulProvider).addtoProcess("<-");
+                }
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.left_long_solid, size: 16),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("\u0025");
+                ref.read(resulProvider).addtoProcess("\u0025");
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.percent_solid, size: 20),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("\u00F7");
+                ref.read(resulProvider).addtoProcess("\u00F7");
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.divide_solid, size: 20),
             ),
@@ -231,22 +244,34 @@ class BasicButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("7");
+                ref.read(resulProvider).addtoProcess("7");
+              },
               isBigButton: true,
               child: const Text("7", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("8");
+                ref.read(resulProvider).addtoProcess("8");
+              },
               isBigButton: true,
               child: const Text("8", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("9");
+                ref.read(resulProvider).addtoProcess("9");
+              },
               isBigButton: true,
               child: const Text("9", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("\u00D7");
+                ref.read(resulProvider).addtoProcess("\u00D7");
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.xmark_solid, size: 20),
             ),
@@ -256,22 +281,34 @@ class BasicButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("4");
+                ref.read(resulProvider).addtoProcess("4");
+              },
               isBigButton: true,
               child: const Text("4", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("5");
+                ref.read(resulProvider).addtoProcess("5");
+              },
               isBigButton: true,
               child: const Text("5", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("6");
+                ref.read(resulProvider).addtoProcess("6");
+              },
               isBigButton: true,
               child: const Text("6", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("\u2212");
+                ref.read(resulProvider).addtoProcess("\u2212");
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.minus_solid, size: 20),
             ),
@@ -281,22 +318,34 @@ class BasicButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("1");
+                ref.read(resulProvider).addtoProcess("1");
+              },
               isBigButton: true,
               child: const Text("1", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("2");
+                ref.read(resulProvider).addtoProcess("2");
+              },
               isBigButton: true,
               child: const Text("2", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("3");
+                ref.read(resulProvider).addtoProcess("3");
+              },
               isBigButton: true,
               child: const Text("3", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("\u002B");
+                ref.read(resulProvider).addtoProcess("\u002B");
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.plus_solid, size: 20),
             ),
@@ -306,22 +355,40 @@ class BasicButtonsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(resulProvider).addtoProcess("ö");
+                ref.read(resulProvider).addtoProcess("=");
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.plus_minus_solid, size: 20),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                ref.read(processProvider).addtoProcess("0");
+                ref.read(resulProvider).addtoProcess("0");
+              },
               isBigButton: true,
               child: const Text("0", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
-              func: () {},
+              func: () {
+                if (!ref.watch(upButtonProvider)) {
+                  ref.read(processProvider).addtoProcess(",");
+                  ref.read(resulProvider).addtoProcess(",");
+                }
+              },
               isBigButton: true,
               child: const Text(",", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonWidget(
-              func: () {},
+              func: () {
+                if(ref
+                    .watch(processProvider)
+                    .pastProcessList
+                    .isNotEmpty) {
+                  ref.read(resulProvider).addtoProcess("=");
+                  }
+              },
               isBigButton: true,
               child: const Icon(FontAwesome.equals_solid, size: 20),
             ),
