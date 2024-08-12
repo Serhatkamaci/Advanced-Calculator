@@ -1,4 +1,5 @@
 import 'package:advanced_calculator/core/button_styles.dart';
+import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
 import 'package:advanced_calculator/src/view/widget/graph_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -38,24 +39,16 @@ class GraphPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.dark_mode_outlined, size: 24),
-            ),
-          ),
+        actions: const [
+          ThemeModeButtonWidget(),
         ],
       ),
       body: const Stack(
         children: [
+          GraphWidget(),
           Padding(
             padding: EdgeInsets.only(left: 16, right: 16, top: 20),
             child: FunctionTextField(),
-          ),
-          GraphWidget(
-            function: "2*x",
           ),
         ],
       ),

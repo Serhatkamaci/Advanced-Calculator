@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-//? Texts
-
 class ProcessTextWidget extends ConsumerWidget {
   const ProcessTextWidget({
     super.key,
@@ -22,8 +20,7 @@ class ProcessTextWidget extends ConsumerWidget {
       ref.watch(processProvider).readtoProcess(),
       style: MyTextTheme.processStyle(context),
       textAlign: TextAlign.end,
-      maxLines: 3,
-      minFontSize: 30,
+      minFontSize: 20,
       maxFontSize: 44,
     );
   }
@@ -37,12 +34,15 @@ class ResultTextWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AutoSizeText(
-      ref.watch(resulProvider).readtoProcessResult(),
-      style: const TextStyle(fontSize: 56),
+      ref.watch(resulProvider).readtoProcessResult().length > 7
+          ? double.parse(ref.watch(resulProvider).readtoProcessResult())
+              .toStringAsExponential(7)
+          : ref.watch(resulProvider).readtoProcessResult(),
       maxLines: 1,
       minFontSize: 30,
-      overflow: TextOverflow.clip,
+      maxFontSize: 56,
       textAlign: TextAlign.end,
+      style: const TextStyle(fontSize: 56),
     );
   }
 }
@@ -172,21 +172,21 @@ class ThemeModeButtonWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: IconButton(
-        onPressed: () {
-          ref.read(themeModeProvider.notifier).state =
-              ref.watch(themeModeProvider) == ThemeMode.light
-                  ? ThemeMode.dark
-                  : ThemeMode.light;
-        },
-        icon: const Icon(Icons.dark_mode_outlined, size: 24),
-      ),
+    return IconButton(
+      onPressed: () {
+        ref.read(themeModeProvider.notifier).state =
+            ref.watch(themeModeProvider) == ThemeMode.light
+                ? ThemeMode.dark
+                : ThemeMode.light;
+      },
+      icon: Icon(
+          ref.watch(themeModeProvider) == ThemeMode.light
+              ? Icons.dark_mode_outlined
+              : Icons.light_mode_outlined,
+          size: 24),
     );
   }
 }
-
 
 class BasicButtonsWidget extends ConsumerWidget {
   const BasicButtonsWidget({
@@ -382,12 +382,9 @@ class BasicButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonWidget(
               func: () {
-                if(ref
-                    .watch(processProvider)
-                    .pastProcessList
-                    .isNotEmpty) {
+                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
                   ref.read(resulProvider).addtoProcess("=");
-                  }
+                }
               },
               isBigButton: true,
               child: const Icon(FontAwesome.equals_solid, size: 20),

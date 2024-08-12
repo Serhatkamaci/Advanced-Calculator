@@ -1,6 +1,7 @@
 import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -54,14 +55,21 @@ class CalculatorPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              padding: const EdgeInsets.only(bottom: 12),
-              width: size.width,
-              child: const ProcessTextWidget(),
+            Expanded(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.bottomRight,
+                width: size.width,
+                padding: const EdgeInsets.only(bottom: 12),
+                child: const ProcessTextWidget(),
+              ),
             ),
-            SizedBox(
-              width: size.width,
-              child: const ResultTextWidget(),
+            Expanded(
+              child: Container(
+                alignment: Alignment.bottomRight,
+                width: size.width,
+                child: const ResultTextWidget(),
+              ),
             ),
             IconButton(
               onPressed: () {

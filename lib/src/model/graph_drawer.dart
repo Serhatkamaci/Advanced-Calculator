@@ -15,7 +15,6 @@ class GraphDrawer {
     String sonuc = "";
     Expression exp = Expression(function);
     exp.setStringVariable("x", x.toString());
-    print(x);
     try {
       sonuc = exp.eval().toString();
     } catch (e) {
