@@ -24,7 +24,6 @@ class Result extends ChangeNotifier {
   }
 
   void addtoProcess(String process) {
-
     if (process == "()") {
       if (pastUniqueConverterList.isEmpty ||
           (int.tryParse(pastUniqueConverterList.last) == null &&
@@ -35,7 +34,7 @@ class Result extends ChangeNotifier {
         pastUniqueConverterList.add(")");
         senttoUniqueConverter += ")";
       }
-    } else if (process == "ö") {
+    } else if (process == "ö" && senttoUniqueConverter.isNotEmpty) {
       senttoUniqueConverter = "-$senttoUniqueConverter";
     } else if (process == "wğ") {
       if (pastUniqueConverterList.last == "ü") {
@@ -70,26 +69,25 @@ class Result extends ChangeNotifier {
       }
     } else if (process == "=") {
       resultProcess();
+      isNumeric(showtoScreenResultValue) ? null : showtoScreenResultValue = "0";
       garbageProvider.addtoGarbage(
         processProvider.procesString,
         showtoScreenResultValue,
       );
-      if(int.tryParse(showtoScreenResultValue)!=null)
-      {
+
+      if (int.tryParse(showtoScreenResultValue) != null &&
+          showtoScreenResultValue != "0") {
         copyPastUniqueConverterList = showtoScreenResultValue.split('');
         pastUniqueConverterList = showtoScreenResultValue.split('');
         processProvider.procesString = showtoScreenResultValue;
         processProvider.pastProcessList = showtoScreenResultValue.split('');
         senttoUniqueConverter = showtoScreenResultValue;
-      }
-      else
-      {
-        copyPastUniqueConverterList=[];
-        pastUniqueConverterList=[];
-        processProvider.procesString="";
-        processProvider.pastProcessList=[];
-        senttoUniqueConverter="";
-
+      } else {
+        copyPastUniqueConverterList = [];
+        pastUniqueConverterList = [];
+        processProvider.procesString = "";
+        processProvider.pastProcessList = [];
+        senttoUniqueConverter = "";
       }
     } else if (process == "1/x" && senttoUniqueConverter.isNotEmpty) {
       copyPastUniqueConverterList.insertAll(0, ["1", "/", "("]);
@@ -102,7 +100,7 @@ class Result extends ChangeNotifier {
       senttoUniqueConverter = "";
       showtoScreenResultValue = "0";
       pastUniqueConverterList = [];
-    } else {
+    } else if (process != "ö") {
       pastUniqueConverterList.add(process);
       senttoUniqueConverter += process;
     }
@@ -114,6 +112,8 @@ class Result extends ChangeNotifier {
     showtoScreenResultValue = UniqueConverter.resultString(
         UniqueConverter.convertString(senttoUniqueConverter));
   }
+
+  bool isNumeric(String s) => double.tryParse(s) != null;
 }
 
 final resulProvider = ChangeNotifierProvider(

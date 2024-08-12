@@ -180,10 +180,11 @@ class ThemeModeButtonWidget extends ConsumerWidget {
                 : ThemeMode.light;
       },
       icon: Icon(
-          ref.watch(themeModeProvider) == ThemeMode.light
-              ? Icons.dark_mode_outlined
-              : Icons.light_mode_outlined,
-          size: 24),
+        ref.watch(themeModeProvider) == ThemeMode.light
+            ? Icons.dark_mode_outlined
+            : Icons.light_mode_outlined,
+        size: 24,
+      ),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:advanced_calculator/src/model/exception.dart';
 import 'package:eval_ex/expression.dart';
 
 class UniqueConverter {
+  static List operators = ["+", "-", "*", "/", "%", "("];
+
   static Map<String, String> unicodeMaps = {
     "\u002B": "+",
     "\u2212": "-",
@@ -44,22 +46,21 @@ class UniqueConverter {
     for (var entry in unicodeMaps.entries) {
       process = process.replaceAll(entry.key, entry.value);
     }
-
     return process;
   }
 
   static String resultString(String convertedProcess) {
-    try{
+    try {
       Expression exp = Expression(convertedProcess);
       return exp.eval().toString();
-    // ignore: non_constant_identifier_names
-    }on TrigonometricErrors catch(e){
+      // ignore: non_constant_identifier_names
+    } on TrigonometricErrors catch (e) {
+      // ignore: avoid_print
       print("Trigonometrik hata");
       return e.errorMessage;
-    }on ExpressionException catch(e){
+    } on ExpressionException catch (e) {
       return e.msg;
-    } on Exception
-    {
+    } on Exception {
       return "Invalid value";
     }
   }
