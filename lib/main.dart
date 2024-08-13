@@ -1,18 +1,11 @@
+import 'package:advanced_calculator/src/business_logic/provider/general_providers.dart';
 import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
 import 'package:advanced_calculator/src/view/screen/graph_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:advanced_calculator/core/theme.dart';
-//import 'package:device_preview/device_preview.dart';
-//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() async {
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
-}
+void main() async => runApp(const ProviderScope(child: MyApp()));
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -20,9 +13,6 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      // useInheritedMediaQuery: true,
-      // locale: DevicePreview.locale(context),
-      // builder: DevicePreview.appBuilder,
       themeMode: ref.watch(themeModeProvider),
       theme: const MaterialTheme(TextTheme()).light(),
       darkTheme: const MaterialTheme(TextTheme()).dark(),

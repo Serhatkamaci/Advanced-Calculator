@@ -1,7 +1,7 @@
 import 'package:advanced_calculator/src/business_logic/provider/garbage_collactor_provider.dart';
+import 'package:advanced_calculator/src/business_logic/provider/general_providers.dart';
 import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
 import 'package:advanced_calculator/src/model/unique_converter.dart';
-import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 

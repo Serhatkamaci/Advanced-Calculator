@@ -3,11 +3,11 @@ import 'package:advanced_calculator/core/text_styles.dart';
 import 'package:advanced_calculator/src/business_logic/provider/garbage_collactor_provider.dart';
 import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
 import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
-import 'package:advanced_calculator/src/view/screen/calculator_screen.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
+import '../../business_logic/provider/general_providers.dart';
 
 class ProcessTextWidget extends ConsumerWidget {
   const ProcessTextWidget({
@@ -396,9 +396,6 @@ class BasicButtonsWidget extends ConsumerWidget {
     );
   }
 }
-
-final upButtonProvider = StateProvider((ref) => false);
-final changeButtonProvider = StateProvider((ref) => false);
 
 class SciButtonsWidget extends ConsumerWidget {
   const SciButtonsWidget({
