@@ -1,5 +1,5 @@
 import 'package:advanced_calculator/core/button_styles.dart';
-import 'package:advanced_calculator/src/business_logic/provider/general_providers.dart';
+import 'package:advanced_calculator/src/business_logic/bloc/general_providers.dart';
 import 'package:advanced_calculator/src/model/graph_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

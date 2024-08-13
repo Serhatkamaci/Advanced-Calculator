@@ -1,9 +1,7 @@
 import 'package:advanced_calculator/src/view/widget/calculator_widgets.dart';
 import 'package:advanced_calculator/core/button_styles.dart';
-import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-
-
+import 'package:flutter/material.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});

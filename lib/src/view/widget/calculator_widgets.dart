@@ -1,13 +1,13 @@
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:advanced_calculator/core/text_styles.dart';
-import 'package:advanced_calculator/src/business_logic/provider/garbage_collactor_provider.dart';
-import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
-import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
+import 'package:advanced_calculator/src/business_logic/bloc/garbage_bloc.dart';
+import 'package:advanced_calculator/src/business_logic/bloc/process_bloc.dart';
+import 'package:advanced_calculator/src/business_logic/bloc/result_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
-import '../../business_logic/provider/general_providers.dart';
+import '../../business_logic/bloc/general_providers.dart';
 
 class ProcessTextWidget extends ConsumerWidget {
   const ProcessTextWidget({
