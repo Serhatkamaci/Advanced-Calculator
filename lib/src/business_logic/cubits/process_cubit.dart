@@ -1,60 +1,54 @@
-import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
+import 'package:advanced_calculator/src/business_logic/cubits/result_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 int parenthesesCount = 0;
 
-class Process extends ChangeNotifier {
-  String procesString = "";
+class ProcessCubit extends Cubit<String>{
+  
+  ProcessCubit():super("");
   List<String> pastProcessList = [];
 
-  String readtoProcess() {
-    return procesString;
-  }
-
-  void addtoProcess(String process) {
+  void addtoProcess(String process){
+    
     if (process == "<-" &&
         !(copyPastUniqueConverterList.last == "wğ" ||
             copyPastUniqueConverterList.last == "ü")) {
       if (pastProcessList.isNotEmpty) {
         String lastElement = pastProcessList.last;
         pastProcessList.removeLast();
-        int index = procesString.lastIndexOf(lastElement);
-        procesString = procesString.substring(0, index);
+        int index = state.lastIndexOf(lastElement);
+        emit(state.substring(0, index));
       } else {
-        procesString = "";
+        emit("");
       }
       if (copyPastUniqueConverterList.last == "(") {
         parenthesesCount -= 1;
       } else if (copyPastUniqueConverterList.last == ")") {
         parenthesesCount += 1;
       }
-    } else if (process == "()") {
+    }else if (process == "()") {
       if (pastProcessList.isEmpty ||
           (int.tryParse(pastProcessList.last) == null &&
               pastProcessList.last != ")")) {
         pastProcessList.add("(");
-        procesString += "(";
+        emit(state+"(");
         parenthesesCount++;
       } else if (parenthesesCount != 0 && pastProcessList.last != "(") {
         pastProcessList.add(")");
-        procesString += ")";
+        emit(state+")");
         parenthesesCount--;
       }
-    } else if (process == "1/x" && procesString.isNotEmpty) {
-      procesString = "1\u00F7($procesString)";
+    } else if (process == "1/x" && state.isNotEmpty) {
+      emit("1\u00F7($state)");
       pastProcessList.insertAll(0, ["1", "/", "("]);
       pastProcessList.add(")");
     } else if (process == "C") {
-      procesString = "";
+      emit("");
       pastProcessList = [];
       parenthesesCount = 0;
     } else if (process != "<-") {
       pastProcessList.add(process);
-      procesString += process;
+      emit(state+process);
     }
-    notifyListeners();
   }
 }
-
-final processProvider = ChangeNotifierProvider((ref) => Process());

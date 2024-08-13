@@ -1,48 +1,52 @@
 import 'package:advanced_calculator/core/button_styles.dart';
 import 'package:advanced_calculator/core/text_styles.dart';
-import 'package:advanced_calculator/src/business_logic/provider/garbage_collactor_provider.dart';
-import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
-import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
+import 'package:advanced_calculator/src/business_logic/cubits/garbage_collactor_cubit.dart';
+import 'package:advanced_calculator/src/business_logic/cubits/process_cubit.dart';
+import 'package:advanced_calculator/src/business_logic/cubits/result_cubit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
-import '../../business_logic/provider/general_providers.dart';
 
-class ProcessTextWidget extends ConsumerWidget {
-  const ProcessTextWidget({
-    super.key,
-  });
+class ProcessTextWidget extends StatelessWidget {
+  const ProcessTextWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return AutoSizeText(
-      ref.watch(processProvider).readtoProcess(),
-      style: MyTextTheme.processStyle(context),
-      textAlign: TextAlign.end,
-      minFontSize: 20,
-      maxFontSize: 44,
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProcessCubit, String>(
+      builder: (context, state) {
+        return AutoSizeText(
+          state,
+          style: MyTextTheme.processStyle(context),
+          textAlign: TextAlign.end,
+          minFontSize: 20,
+          maxFontSize: 44,
+        );
+      },
     );
   }
 }
 
-class ResultTextWidget extends ConsumerWidget {
+class ResultTextWidget extends StatelessWidget {
   const ResultTextWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return AutoSizeText(
-      ref.watch(resulProvider).readtoProcessResult().length > 7
-          ? double.parse(ref.watch(resulProvider).readtoProcessResult())
-              .toStringAsExponential(7)
-          : ref.watch(resulProvider).readtoProcessResult(),
-      maxLines: 1,
-      minFontSize: 30,
-      maxFontSize: 56,
-      textAlign: TextAlign.end,
-      style: const TextStyle(fontSize: 56),
+  Widget build(BuildContext context) {
+    return BlocBuilder<ResultCubit, String>(
+      builder: (context, state) {
+        return AutoSizeText(
+          state.length > 7
+              ? double.parse(state).toStringAsExponential(7)
+              : state,
+          maxLines: 1,
+          minFontSize: 30,
+          maxFontSize: 56,
+          textAlign: TextAlign.end,
+          style: const TextStyle(fontSize: 56),
+        );
+      },
     );
   }
 }
@@ -125,62 +129,75 @@ class TextButtonWidget extends StatelessWidget {
   }
 }
 
-class ButtonsWidget extends ConsumerWidget {
+class ButtonsWidget extends StatelessWidget {
+  final Size size;
+  final upButtonCubit;
+  final calculatorModeCubit;
+  final changeButtonCubit;
+
   const ButtonsWidget({
     super.key,
     required this.size,
+    required this.upButtonCubit,
+    required this.calculatorModeCubit,
+    required this.changeButtonCubit,
   });
 
-  final Size size;
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 20),
       height: size.height / 2,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
-        child: ref.watch(calculatorModeProvider)
-            ? const BasicButtonsWidget()
-            : const SciButtonsWidget(),
+        child: calculatorModeCubit.value
+            ? BasicButtonsWidget(
+                upButtonCubit: upButtonCubit,
+              )
+            : SciButtonsWidget(
+                upButtonCubit: upButtonCubit,
+                changeButtonCubit: changeButtonCubit,
+              ),
       ),
     );
   }
 }
 
-class CalculatorModeButtonWidget extends ConsumerWidget {
+class CalculatorModeButtonWidget extends StatelessWidget {
+  final calculatorModeCubit;
   const CalculatorModeButtonWidget({
     super.key,
+    required this.calculatorModeCubit,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        ref.read(calculatorModeProvider.notifier).state =
-            !ref.watch(calculatorModeProvider);
+        calculatorModeCubit.value = !calculatorModeCubit.value;
       },
       icon: const Icon(FontAwesome.vial_solid, size: 16),
     );
   }
 }
 
-class ThemeModeButtonWidget extends ConsumerWidget {
-  const ThemeModeButtonWidget({
-    super.key,
+class ThemeModeButtonWidget extends StatelessWidget {
+  
+  final themeModeCubit;
+  ThemeModeButtonWidget({
+    required this.themeModeCubit,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        ref.read(themeModeProvider.notifier).state =
-            ref.watch(themeModeProvider) == ThemeMode.light
-                ? ThemeMode.dark
-                : ThemeMode.light;
+        themeModeCubit.value = themeModeCubit.value == ThemeMode.light
+            ? ThemeMode.dark
+            : ThemeMode.light;
       },
       icon: Icon(
-        ref.watch(themeModeProvider) == ThemeMode.light
+        themeModeCubit.value == ThemeMode.light
             ? Icons.dark_mode_outlined
             : Icons.light_mode_outlined,
         size: 24,
@@ -189,13 +206,17 @@ class ThemeModeButtonWidget extends ConsumerWidget {
   }
 }
 
-class BasicButtonsWidget extends ConsumerWidget {
+class BasicButtonsWidget extends StatelessWidget {
+  final upButtonCubit;
   const BasicButtonsWidget({
-    super.key,
+    required this.upButtonCubit,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final processCubit = context.read<ProcessCubit>();
+    final resultCubit = context.read<ResultCubit>();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -204,8 +225,8 @@ class BasicButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("C");
-                ref.read(resulProvider).addtoProcess("C");
+                processCubit.addtoProcess("C");
+                resultCubit.addtoProcess("C");
               },
               isBigButton: true,
               child: const Text(
@@ -215,9 +236,10 @@ class BasicButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonWidget(
               func: () {
-                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
-                  ref.read(processProvider).addtoProcess("<-");
-                  ref.read(resulProvider).addtoProcess("<-");
+                
+                if (processCubit.pastProcessList.isNotEmpty) {
+                  processCubit.addtoProcess("<-");
+                  resultCubit.addtoProcess("<-");
                 }
               },
               isBigButton: true,
@@ -225,16 +247,16 @@ class BasicButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u0025");
-                ref.read(resulProvider).addtoProcess("\u0025");
+                processCubit.addtoProcess("\u0025");
+                resultCubit.addtoProcess("\u0025");
               },
               isBigButton: true,
               child: const Icon(FontAwesome.percent_solid, size: 20),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u00F7");
-                ref.read(resulProvider).addtoProcess("\u00F7");
+                processCubit.addtoProcess("\u00F7");
+                resultCubit.addtoProcess("\u00F7");
               },
               isBigButton: true,
               child: const Icon(FontAwesome.divide_solid, size: 20),
@@ -246,32 +268,32 @@ class BasicButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("7");
-                ref.read(resulProvider).addtoProcess("7");
+                processCubit.addtoProcess("7");
+                resultCubit.addtoProcess("7");
               },
               isBigButton: true,
               child: const Text("7", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("8");
-                ref.read(resulProvider).addtoProcess("8");
+                processCubit.addtoProcess("8");
+                resultCubit.addtoProcess("8");
               },
               isBigButton: true,
               child: const Text("8", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("9");
-                ref.read(resulProvider).addtoProcess("9");
+                processCubit.addtoProcess("9");
+                resultCubit.addtoProcess("9");
               },
               isBigButton: true,
               child: const Text("9", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u00D7");
-                ref.read(resulProvider).addtoProcess("\u00D7");
+                processCubit.addtoProcess("\u00D7");
+                resultCubit.addtoProcess("\u00D7");
               },
               isBigButton: true,
               child: const Icon(FontAwesome.xmark_solid, size: 20),
@@ -283,32 +305,32 @@ class BasicButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("4");
-                ref.read(resulProvider).addtoProcess("4");
+                processCubit.addtoProcess("4");
+                resultCubit.addtoProcess("4");
               },
               isBigButton: true,
               child: const Text("4", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("5");
-                ref.read(resulProvider).addtoProcess("5");
+                processCubit.addtoProcess("5");
+                resultCubit.addtoProcess("5");
               },
               isBigButton: true,
               child: const Text("5", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("6");
-                ref.read(resulProvider).addtoProcess("6");
+                processCubit.addtoProcess("6");
+                resultCubit.addtoProcess("6");
               },
               isBigButton: true,
               child: const Text("6", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u2212");
-                ref.read(resulProvider).addtoProcess("\u2212");
+                processCubit.addtoProcess("\u2212");
+                resultCubit.addtoProcess("\u2212");
               },
               isBigButton: true,
               child: const Icon(FontAwesome.minus_solid, size: 20),
@@ -320,32 +342,32 @@ class BasicButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("1");
-                ref.read(resulProvider).addtoProcess("1");
+                processCubit.addtoProcess("1");
+                resultCubit.addtoProcess("1");
               },
               isBigButton: true,
               child: const Text("1", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("2");
-                ref.read(resulProvider).addtoProcess("2");
+                processCubit.addtoProcess("2");
+                resultCubit.addtoProcess("2");
               },
               isBigButton: true,
               child: const Text("2", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("3");
-                ref.read(resulProvider).addtoProcess("3");
+                processCubit.addtoProcess("3");
+                resultCubit.addtoProcess("3");
               },
               isBigButton: true,
               child: const Text("3", style: TextStyle(fontSize: 28)),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u002B");
-                ref.read(resulProvider).addtoProcess("\u002B");
+                processCubit.addtoProcess("\u002B");
+                resultCubit.addtoProcess("\u002B");
               },
               isBigButton: true,
               child: const Icon(FontAwesome.plus_solid, size: 20),
@@ -357,25 +379,25 @@ class BasicButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("ö");
-                ref.read(resulProvider).addtoProcess("=");
+                resultCubit.addtoProcess("ö");
+                resultCubit.addtoProcess("=");
               },
               isBigButton: true,
               child: const Icon(FontAwesome.plus_minus_solid, size: 20),
             ),
             TextButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("0");
-                ref.read(resulProvider).addtoProcess("0");
+                processCubit.addtoProcess("0");
+                resultCubit.addtoProcess("0");
               },
               isBigButton: true,
               child: const Text("0", style: TextStyle(fontSize: 28)),
             ),
             TextButtonWidget(
               func: () {
-                if (!ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess(",");
-                  ref.read(resulProvider).addtoProcess(",");
+                if (!upButtonCubit.value) {
+                  processCubit.addtoProcess(",");
+                  resultCubit.addtoProcess(",");
                 }
               },
               isBigButton: true,
@@ -383,8 +405,8 @@ class BasicButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonWidget(
               func: () {
-                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
-                  ref.read(resulProvider).addtoProcess("=");
+                if (processCubit.pastProcessList.isNotEmpty) {
+                  resultCubit.addtoProcess("=");
                 }
               },
               isBigButton: true,
@@ -397,13 +419,21 @@ class BasicButtonsWidget extends ConsumerWidget {
   }
 }
 
-class SciButtonsWidget extends ConsumerWidget {
+class SciButtonsWidget extends StatelessWidget {
+  final upButtonCubit;
+  final changeButtonCubit;
+
   const SciButtonsWidget({
+    required this.upButtonCubit,
+    required this.changeButtonCubit,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final processCubit = context.read<ProcessCubit>();
+    final resultCubit = context.read<ResultCubit>();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -412,8 +442,8 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("C");
-                ref.read(resulProvider).addtoProcess("C");
+                processCubit.addtoProcess("C");
+                resultCubit.addtoProcess("C");
               },
               child: const Text(
                 "C",
@@ -422,31 +452,31 @@ class SciButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonWidget(
               func: () {
-                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
-                  ref.read(processProvider).addtoProcess("<-");
-                  ref.read(resulProvider).addtoProcess("<-");
+                if (processCubit.pastProcessList.isNotEmpty) {
+                  processCubit.addtoProcess("<-");
+                  resultCubit.addtoProcess("<-");
                 }
               },
               child: const Icon(FontAwesome.left_long_solid, size: 16),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u0025");
-                ref.read(resulProvider).addtoProcess("\u0025");
+                processCubit.addtoProcess("\u0025");
+                resultCubit.addtoProcess("\u0025");
               },
               child: const Icon(FontAwesome.percent_solid, size: 16),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u00F7");
-                ref.read(resulProvider).addtoProcess("\u00F7");
+                processCubit.addtoProcess("\u00F7");
+                resultCubit.addtoProcess("\u00F7");
               },
               child: const Icon(FontAwesome.divide_solid, size: 16),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u00D7");
-                ref.read(resulProvider).addtoProcess("\u00D7");
+                processCubit.addtoProcess("\u00D7");
+                resultCubit.addtoProcess("\u00D7");
               },
               child: const Icon(FontAwesome.xmark_solid, size: 16),
             ),
@@ -457,51 +487,51 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2077");
-                  ref.read(resulProvider).addtoProcess("\u2077");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2077");
+                  resultCubit.addtoProcess("\u2077");
                 } else {
-                  ref.read(processProvider).addtoProcess("7");
-                  ref.read(resulProvider).addtoProcess("7");
+                  processCubit.addtoProcess("7");
+                  resultCubit.addtoProcess("7");
                 }
               },
               child: const SpecialTextWidget(text: "7"),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2078");
-                  ref.read(resulProvider).addtoProcess("\u2078");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2078");
+                  resultCubit.addtoProcess("\u2078");
                 } else {
-                  ref.read(processProvider).addtoProcess("8");
-                  ref.read(resulProvider).addtoProcess("8");
+                  processCubit.addtoProcess("8");
+                  resultCubit.addtoProcess("8");
                 }
               },
               child: const SpecialTextWidget(text: "8"),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2079");
-                  ref.read(resulProvider).addtoProcess("\u2079");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2079");
+                  resultCubit.addtoProcess("\u2079");
                 } else {
-                  ref.read(processProvider).addtoProcess("9");
-                  ref.read(resulProvider).addtoProcess("9");
+                  processCubit.addtoProcess("9");
+                  resultCubit.addtoProcess("9");
                 }
               },
               child: const SpecialTextWidget(text: "9"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u2212");
-                ref.read(resulProvider).addtoProcess("\u2212");
+                processCubit.addtoProcess("\u2212");
+                resultCubit.addtoProcess("\u2212");
               },
               child: const Icon(FontAwesome.minus_solid, size: 16),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u002B");
-                ref.read(resulProvider).addtoProcess("\u002B");
+                processCubit.addtoProcess("\u002B");
+                resultCubit.addtoProcess("\u002B");
               },
               child: const Icon(FontAwesome.plus_solid, size: 16),
             ),
@@ -512,44 +542,44 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2074");
-                  ref.read(resulProvider).addtoProcess("\u2074");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2074");
+                  resultCubit.addtoProcess("\u2074");
                 } else {
-                  ref.read(processProvider).addtoProcess("4");
-                  ref.read(resulProvider).addtoProcess("4");
+                  processCubit.addtoProcess("4");
+                  resultCubit.addtoProcess("4");
                 }
               },
               child: const SpecialTextWidget(text: "4"),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2075");
-                  ref.read(resulProvider).addtoProcess("\u2075");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2075");
+                  resultCubit.addtoProcess("\u2075");
                 } else {
-                  ref.read(processProvider).addtoProcess("5");
-                  ref.read(resulProvider).addtoProcess("5");
+                  processCubit.addtoProcess("5");
+                  resultCubit.addtoProcess("5");
                 }
               },
               child: const SpecialTextWidget(text: "5"),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2076");
-                  ref.read(resulProvider).addtoProcess("\u2076");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2076");
+                  resultCubit.addtoProcess("\u2076");
                 } else {
-                  ref.read(processProvider).addtoProcess("6");
-                  ref.read(resulProvider).addtoProcess("6");
+                  processCubit.addtoProcess("6");
+                  resultCubit.addtoProcess("6");
                 }
               },
               child: const SpecialTextWidget(text: "6"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u221A(");
-                ref.read(resulProvider).addtoProcess("\u221A(");
+                processCubit.addtoProcess("\u221A(");
+                resultCubit.addtoProcess("\u221A(");
                 parenthesesCount++;
               },
               child: const Icon(
@@ -559,8 +589,8 @@ class SciButtonsWidget extends ConsumerWidget {
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("\u00B2");
-                ref.read(resulProvider).addtoProcess("q");
+                processCubit.addtoProcess("\u00B2");
+                resultCubit.addtoProcess("q");
               },
               child: const SpecialFilledTextWidget(text: "x\u00B2"),
             ),
@@ -571,60 +601,59 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u00B9");
-                  ref.read(resulProvider).addtoProcess("\u00B9");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u00B9");
+                  resultCubit.addtoProcess("\u00B9");
                 } else {
-                  ref.read(processProvider).addtoProcess("1");
-                  ref.read(resulProvider).addtoProcess("1");
+                  processCubit.addtoProcess("1");
+                  resultCubit.addtoProcess("1");
                 }
               },
               child: const SpecialTextWidget(text: "1"),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u00B2");
-                  ref.read(resulProvider).addtoProcess("\u00B2");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u00B2");
+                  resultCubit.addtoProcess("\u00B2");
                 } else {
-                  ref.read(processProvider).addtoProcess("2");
-                  ref.read(resulProvider).addtoProcess("2");
+                  processCubit.addtoProcess("2");
+                  resultCubit.addtoProcess("2");
                 }
               },
               child: const SpecialTextWidget(text: "2"),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u00B3");
-                  ref.read(resulProvider).addtoProcess("\u00B3");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u00B3");
+                  resultCubit.addtoProcess("\u00B3");
                 } else {
-                  ref.read(processProvider).addtoProcess("3");
-                  ref.read(resulProvider).addtoProcess("3");
+                  processCubit.addtoProcess("3");
+                  resultCubit.addtoProcess("3");
                 }
               },
               child: const SpecialTextWidget(text: "3"),
             ),
             FilledButtonTonalWidget(
-              isSelected: ref.watch(upButtonProvider),
+              isSelected: upButtonCubit.value,
               func: () {
-                if (ref.watch(processProvider).pastProcessList.isNotEmpty) {
-                  ref.read(upButtonProvider.notifier).state =
-                      !ref.watch(upButtonProvider);
-                  ref.watch(upButtonProvider)
-                      ? ref.read(resulProvider).addtoProcess("wğ")
-                      : ref.read(resulProvider).addtoProcess("ü");
+                if (processCubit.pastProcessList.isNotEmpty) {
+                  upButtonCubit.value = !upButtonCubit.value;
+                  upButtonCubit.value
+                      ? resultCubit.addtoProcess("wğ")
+                      : resultCubit.addtoProcess("ü");
                 }
               },
               child: SpecialFilledTextWidget(
                 text: "^",
-                isSelected: ref.watch(upButtonProvider),
+                isSelected: upButtonCubit.value,
               ),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("()");
-                ref.read(processProvider).addtoProcess("()");
+                resultCubit.addtoProcess("()");
+                processCubit.addtoProcess("()");
               },
               child: const SpecialFilledTextWidget(text: "( )"),
             ),
@@ -635,50 +664,49 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("ö");
-                ref.read(resulProvider).addtoProcess("=");
+                resultCubit.addtoProcess("ö");
+                resultCubit.addtoProcess("=");
               },
               child: const Icon(FontAwesome.plus_minus_solid, size: 16),
             ),
             TextButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess("\u2070");
-                  ref.read(resulProvider).addtoProcess("\u2070");
+                if (upButtonCubit.value) {
+                  processCubit.addtoProcess("\u2070");
+                  resultCubit.addtoProcess("\u2070");
                 } else {
-                  ref.read(processProvider).addtoProcess("0");
-                  ref.read(resulProvider).addtoProcess("0");
+                  processCubit.addtoProcess("0");
+                  resultCubit.addtoProcess("0");
                 }
               },
               child: const SpecialTextWidget(text: "0"),
             ),
             TextButtonWidget(
               func: () {
-                if (!ref.watch(upButtonProvider)) {
-                  ref.read(processProvider).addtoProcess(",");
-                  ref.read(resulProvider).addtoProcess(",");
+                if (!upButtonCubit.value) {
+                  processCubit.addtoProcess(",");
+                  resultCubit.addtoProcess(",");
                 }
               },
               child: const SpecialTextWidget(text: ","),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(processProvider).addtoProcess("rad(");
-                ref.read(resulProvider).addtoProcess("rad(");
+                processCubit.addtoProcess("rad(");
+                resultCubit.addtoProcess("rad(");
                 parenthesesCount++;
               },
               child: const SpecialFilledTextWidget(text: "Rad"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(changeButtonProvider.notifier).state =
-                    !ref.watch(changeButtonProvider);
+                changeButtonCubit.value = !changeButtonCubit.value;
               },
-              isSelected: ref.watch(changeButtonProvider),
+              isSelected: changeButtonCubit.value,
               child: Icon(
                 FontAwesome.right_left_solid,
                 size: 14,
-                color: ref.watch(changeButtonProvider)
+                color: changeButtonCubit.value
                     ? Theme.of(context).colorScheme.onPrimary
                     : null,
               ),
@@ -690,72 +718,72 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonTonalWidget(
               func: () {
-                ref.watch(changeButtonProvider)
+                changeButtonCubit.value
                     ? {
-                        ref.read(processProvider).addtoProcess("arcsin("),
-                        ref.read(resulProvider).addtoProcess("arcsin("),
+                        processCubit.addtoProcess("arcsin("),
+                        resultCubit.addtoProcess("arcsin("),
                       }
                     : {
-                        ref.read(processProvider).addtoProcess("sin("),
-                        ref.read(resulProvider).addtoProcess("sin("),
+                        processCubit.addtoProcess("sin("),
+                        resultCubit.addtoProcess("sin("),
                       };
                 parenthesesCount++;
               },
-              isSelected: ref.watch(changeButtonProvider),
+              isSelected: changeButtonCubit.value,
               child: SpecialFilledTextWidget(
                 text: "sin",
-                isSelected: ref.watch(changeButtonProvider),
+                isSelected: changeButtonCubit.value,
               ),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.watch(changeButtonProvider)
+                changeButtonCubit.value
                     ? {
-                        ref.read(processProvider).addtoProcess("arccos("),
-                        ref.read(resulProvider).addtoProcess("arccos(")
+                        processCubit.addtoProcess("arccos("),
+                        resultCubit.addtoProcess("arccos(")
                       }
                     : {
-                        ref.read(processProvider).addtoProcess("cos("),
-                        ref.read(resulProvider).addtoProcess("cos(")
+                        processCubit.addtoProcess("cos("),
+                        resultCubit.addtoProcess("cos(")
                       };
                 parenthesesCount++;
               },
-              isSelected: ref.watch(changeButtonProvider),
+              isSelected: changeButtonCubit.value,
               child: SpecialFilledTextWidget(
                 text: "cos",
-                isSelected: ref.watch(changeButtonProvider),
+                isSelected: changeButtonCubit.value,
               ),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.watch(changeButtonProvider)
+                changeButtonCubit.value
                     ? {
-                        ref.read(processProvider).addtoProcess("arctan("),
-                        ref.read(resulProvider).addtoProcess("arctan("),
+                        processCubit.addtoProcess("arctan("),
+                        resultCubit.addtoProcess("arctan("),
                       }
                     : {
-                        ref.read(processProvider).addtoProcess("tan("),
-                        ref.read(resulProvider).addtoProcess("tan("),
+                        processCubit.addtoProcess("tan("),
+                        resultCubit.addtoProcess("tan("),
                       };
                 parenthesesCount++;
               },
-              isSelected: ref.watch(changeButtonProvider),
+              isSelected: changeButtonCubit.value,
               child: SpecialFilledTextWidget(
                 text: "tan",
-                isSelected: ref.watch(changeButtonProvider),
+                isSelected: changeButtonCubit.value,
               ),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("π");
-                ref.read(processProvider).addtoProcess("π");
+                resultCubit.addtoProcess("π");
+                processCubit.addtoProcess("π");
               },
               child: const SpecialFilledTextWidget(text: "π"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("e");
-                ref.read(processProvider).addtoProcess("e");
+                resultCubit.addtoProcess("e");
+                processCubit.addtoProcess("e");
               },
               child: const SpecialFilledTextWidget(text: "e"),
             ),
@@ -766,38 +794,38 @@ class SciButtonsWidget extends ConsumerWidget {
           children: [
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("ln(");
-                ref.read(processProvider).addtoProcess("ln(");
+                resultCubit.addtoProcess("ln(");
+                processCubit.addtoProcess("ln(");
                 parenthesesCount++;
               },
               child: const SpecialFilledTextWidget(text: "ln"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("log(");
-                ref.read(processProvider).addtoProcess("log(");
+                resultCubit.addtoProcess("log(");
+                processCubit.addtoProcess("log(");
                 parenthesesCount++;
               },
               child: const SpecialFilledTextWidget(text: "log"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("1/x");
-                ref.read(processProvider).addtoProcess("1/x");
+                resultCubit.addtoProcess("1/x");
+                processCubit.addtoProcess("1/x");
               },
               child: const SpecialFilledTextWidget(text: "1/x"),
             ),
             FilledButtonTonalWidget(
               func: () {
-                ref.read(resulProvider).addtoProcess("abs(");
-                ref.read(processProvider).addtoProcess("abs(");
+                resultCubit.addtoProcess("abs(");
+                processCubit.addtoProcess("abs(");
                 parenthesesCount++;
               },
               child: const SpecialFilledTextWidget(text: "|x|"),
             ),
             FilledButtonWidget(
               func: () {
-                if (ref.watch(upButtonProvider)) {
+                if (upButtonCubit.value) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: const Text(
@@ -823,11 +851,10 @@ class SciButtonsWidget extends ConsumerWidget {
                       ),
                     ),
                   );
-                } else if (ref
-                    .watch(processProvider)
+                } else if (processCubit
                     .pastProcessList
                     .isNotEmpty) {
-                  ref.read(resulProvider).addtoProcess("=");
+                  resultCubit.addtoProcess("=");
                 }
               },
               child: const Icon(FontAwesome.equals_solid, size: 16),
@@ -877,18 +904,20 @@ class SpecialFilledTextWidget extends StatelessWidget {
 
 //? BottomSheet
 
-class BottomSheetWidget extends ConsumerWidget {
+class BottomSheetWidget extends StatelessWidget {
   final Size size;
   const BottomSheetWidget({super.key, required this.size});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
+  Widget build(BuildContext context){
+      return SizedBox(
       height: size.height / 3,
       width: size.width,
-      child: Stack(
+      child: BlocBuilder<GarbageCollactorCubit, Map<String, String>>(
+        builder: (context, state){
+          return Stack(
         children: [
-          ref.watch(garbageCollactorProvider).garbage.isEmpty
+          state.isEmpty
               ? Container(
                   alignment: Alignment.topCenter,
                   padding: const EdgeInsets.only(top: 10),
@@ -898,17 +927,13 @@ class BottomSheetWidget extends ConsumerWidget {
                   ),
                 )
               : ListView.builder(
-                  itemCount: ref.watch(garbageCollactorProvider).garbage.length,
+                  itemCount: state.length,
                   itemBuilder: (context, index) {
                     return PastItemWidget(
-                      proces: ref
-                          .watch(garbageCollactorProvider)
-                          .garbage
+                      proces: state
                           .keys
                           .toList()[index],
-                      result: ref
-                          .watch(garbageCollactorProvider)
-                          .garbage
+                      result: state
                           .values
                           .toList()[index],
                     );
@@ -920,14 +945,16 @@ class BottomSheetWidget extends ConsumerWidget {
             child: IconButton.filledTonal(
               icon: const Icon(FontAwesome.trash_solid, size: 16),
               onPressed: () {
-                ref.read(garbageCollactorProvider).garbage.clear();
-                ref.read(resulProvider).addtoProcess("C");
-                ref.read(processProvider).addtoProcess("C");
+                state.clear();
+                context.read<ResultCubit>().addtoProcess("C");
+                context.read<ProcessCubit>().addtoProcess("C");
                 Navigator.pop(context);
               },
             ),
           ),
         ],
+      );
+        },
       ),
     );
   }

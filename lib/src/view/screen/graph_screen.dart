@@ -4,7 +4,14 @@ import 'package:advanced_calculator/src/view/widget/graph_widgets.dart';
 import 'package:flutter/material.dart';
 
 class GraphPage extends StatelessWidget {
-  const GraphPage({super.key});
+
+  final functionCubit;
+  final themeModeCubit;
+  const GraphPage({
+    super.key, 
+    required this.functionCubit, 
+    required this.themeModeCubit,
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +46,16 @@ class GraphPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: const [
-          ThemeModeButtonWidget(),
+        actions: [
+          ThemeModeButtonWidget(themeModeCubit:  themeModeCubit,),
         ],
       ),
-      body: const Stack(
+      body: Stack(
         children: [
-          GraphWidget(),
+          GraphWidget(functionCubit: functionCubit),
           Padding(
             padding: EdgeInsets.only(left: 16, right: 16, top: 20),
-            child: FunctionTextField(),
+            child: FunctionTextField(functionCubit: functionCubit),
           ),
         ],
       ),

@@ -1,23 +1,24 @@
 import 'package:advanced_calculator/core/button_styles.dart';
-import 'package:advanced_calculator/src/business_logic/provider/general_providers.dart';
 import 'package:advanced_calculator/src/model/graph_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-class FunctionTextField extends ConsumerWidget {
+class FunctionTextField extends StatelessWidget {
+
+  final functionCubit;
   const FunctionTextField({
     super.key,
+    this.functionCubit,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return TextField(
       onChanged: (value) {
-        ref.read(functionProvider.notifier).state = value;
+        functionCubit.value = value;
       },
       decoration: InputDecoration(
         filled: true,
@@ -70,13 +71,16 @@ class InfoDiaogWidget extends StatelessWidget {
 
 //------------------------------------------------------------------------------
 
-class GraphWidget extends ConsumerWidget {
+class GraphWidget extends StatelessWidget {
+
+  final functionCubit;
   const GraphWidget({
     super.key,
+    required this.functionCubit,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Center(
       child: SfCartesianChart(
         plotAreaBorderWidth: 0,
@@ -102,7 +106,7 @@ class GraphWidget extends ConsumerWidget {
         ),
         series: <LineSeries>[
           LineSeries<ChartData, num>(
-            dataSource: GraphDrawer.generateData(ref.watch(functionProvider)),
+            dataSource: GraphDrawer.generateData(functionCubit.value),
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             color: Theme.of(context).colorScheme.primary,

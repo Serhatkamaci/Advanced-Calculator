@@ -6,7 +6,18 @@ import 'package:icons_plus/icons_plus.dart';
 
 
 class CalculatorPage extends StatelessWidget {
-  const CalculatorPage({super.key});
+
+  final upButtonCubit;
+  final calculatorModeCubit;
+  final themeModeCubit;
+  final changeButtonCubit;
+
+  const CalculatorPage({super.key,
+  required this.upButtonCubit,
+  required this.calculatorModeCubit,
+  required this.themeModeCubit,
+  required this.changeButtonCubit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +26,7 @@ class CalculatorPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        leading: const CalculatorModeButtonWidget(),
+        leading: CalculatorModeButtonWidget(calculatorModeCubit: calculatorModeCubit),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -41,8 +52,8 @@ class CalculatorPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: const [
-          ThemeModeButtonWidget(),
+        actions: [
+          ThemeModeButtonWidget(themeModeCubit: themeModeCubit,),
         ],
       ),
       body: Container(
@@ -74,7 +85,7 @@ class CalculatorPage extends StatelessWidget {
                   showDragHandle: true,
                   context: context,
                   builder: (BuildContext context) {
-                    return BottomSheetWidget(size: size);
+                    return BottomSheetWidget(size: size); 
                   },
                 );
               },
@@ -84,7 +95,12 @@ class CalculatorPage extends StatelessWidget {
               thickness: 2.0,
               color: Theme.of(context).colorScheme.outlineVariant,
             ),
-            ButtonsWidget(size: size),
+            ButtonsWidget(
+              size: size, 
+              upButtonCubit: upButtonCubit, 
+              calculatorModeCubit: calculatorModeCubit,
+              changeButtonCubit: changeButtonCubit,
+              ),
           ],
         ),
       ),

@@ -1,29 +1,23 @@
-import 'package:advanced_calculator/src/business_logic/provider/garbage_collactor_provider.dart';
-import 'package:advanced_calculator/src/business_logic/provider/general_providers.dart';
-import 'package:advanced_calculator/src/business_logic/provider/process_provider.dart';
+import 'package:advanced_calculator/src/business_logic/cubits/process_cubit.dart';
 import 'package:advanced_calculator/src/model/unique_converter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 List<String> copyPastUniqueConverterList = [];
 
-class Result extends ChangeNotifier {
-  GarbageCollactor garbageProvider;
-  Process processProvider;
-  // ignore: prefer_typing_uninitialized_variables
-  var upButtonProvider;
+class ResultCubit extends Cubit<String>{
+  
+  // Garbage ve upButton yazılacak. 
 
-  Result(this.garbageProvider, this.processProvider, this.upButtonProvider);
+  final processCubit;
+  final upButtonCubit;
+  final garbageCollactorCubit;
+
+  ResultCubit({this.processCubit, this.upButtonCubit, this.garbageCollactorCubit}):super("0");
 
   String senttoUniqueConverter = "";
-  String showtoScreenResultValue = "0";
   List<String> pastUniqueConverterList = [];
 
-  String readtoProcessResult() {
-    return showtoScreenResultValue;
-  }
-
-  void addtoProcess(String process) {
+  void addtoProcess(String process){
     if (process == "()") {
       if (pastUniqueConverterList.isEmpty ||
           (int.tryParse(pastUniqueConverterList.last) == null &&
@@ -51,9 +45,9 @@ class Result extends ChangeNotifier {
       senttoUniqueConverter = senttoUniqueConverter.substring(0, index);
     } else if (process == "<-") {
       if (pastUniqueConverterList.last == "wğ") {
-        upButtonProvider.state = false;
+        upButtonCubit.value = false;
       } else if (pastUniqueConverterList.last == "ü") {
-        upButtonProvider.state = true;
+        upButtonCubit.value = true;
       }
       if (pastUniqueConverterList.isNotEmpty) {
         String lastElement = pastUniqueConverterList.last;
@@ -67,26 +61,26 @@ class Result extends ChangeNotifier {
       } else {
         senttoUniqueConverter = "";
       }
-    } else if (process == "=") {
+    } else if (process == "=") {   
       resultProcess();
-      isNumeric(showtoScreenResultValue) ? null : showtoScreenResultValue = "0";
-      garbageProvider.addtoGarbage(
-        processProvider.procesString,
-        showtoScreenResultValue,
+      isNumeric(state) ? null :emit("0");
+      garbageCollactorCubit.addtoGarbage(
+        processCubit.state,
+        state,
       );
 
-      if (int.tryParse(showtoScreenResultValue) != null &&
-          showtoScreenResultValue != "0") {
-        copyPastUniqueConverterList = showtoScreenResultValue.split('');
-        pastUniqueConverterList = showtoScreenResultValue.split('');
-        processProvider.procesString = showtoScreenResultValue;
-        processProvider.pastProcessList = showtoScreenResultValue.split('');
-        senttoUniqueConverter = showtoScreenResultValue;
+      if (int.tryParse(state) != null &&
+          state != "0") {
+        copyPastUniqueConverterList = state.split('');
+        pastUniqueConverterList = state.split('');
+        processCubit.emit(state);
+        processCubit.pastProcessList = state.split('');
+        senttoUniqueConverter = state;
       } else {
-        copyPastUniqueConverterList = [];
-        pastUniqueConverterList = [];
-        processProvider.procesString = "";
-        processProvider.pastProcessList = [];
+        copyPastUniqueConverterList = <String>[];
+        pastUniqueConverterList = <String>[];
+        processCubit.emit("");;
+        processCubit.pastProcessList = <String>[];
         senttoUniqueConverter = "";
       }
     } else if (process == "1/x" && senttoUniqueConverter.isNotEmpty) {
@@ -96,30 +90,22 @@ class Result extends ChangeNotifier {
       pastUniqueConverterList.add(")");
       senttoUniqueConverter = "1/($senttoUniqueConverter)";
     } else if (process == "C") {
-      upButtonProvider.state = false;
+      upButtonCubit.value = false;
       senttoUniqueConverter = "";
-      showtoScreenResultValue = "0";
+      emit("0");
       pastUniqueConverterList = [];
     } else if (process != "ö") {
       pastUniqueConverterList.add(process);
       senttoUniqueConverter += process;
     }
     copyPastUniqueConverterList = pastUniqueConverterList;
-    notifyListeners();
   }
 
   void resultProcess() {
-    showtoScreenResultValue = UniqueConverter.resultString(
-        UniqueConverter.convertString(senttoUniqueConverter));
+    
+    emit(UniqueConverter.resultString(
+        UniqueConverter.convertString(senttoUniqueConverter)));
   }
 
-  bool isNumeric(String s) => double.tryParse(s) != null;
+  bool isNumeric(String s) => double.tryParse(s) != null; 
 }
-
-final resulProvider = ChangeNotifierProvider(
-  (ref) => Result(
-    ref.read(garbageCollactorProvider),
-    ref.read(processProvider),
-    ref.read(upButtonProvider.notifier),
-  ),
-);
