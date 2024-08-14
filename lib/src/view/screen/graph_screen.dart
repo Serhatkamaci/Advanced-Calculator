@@ -4,7 +4,13 @@ import 'package:advanced_calculator/src/view/widget/graph_widgets.dart';
 import 'package:flutter/material.dart';
 
 class GraphPage extends StatelessWidget {
-  const GraphPage({super.key});
+  final ValueNotifier<ThemeMode> themeModeVariable;
+  final ValueNotifier<String> functionVariable;
+  const GraphPage({
+    super.key,
+    required this.themeModeVariable,
+    required this.functionVariable,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +45,18 @@ class GraphPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: const [
-          ThemeModeButtonWidget(),
+        actions: [
+          ThemeModeButtonWidget(
+            themeModeVariable: themeModeVariable,
+          ),
         ],
       ),
-      body: const Stack(
+      body: Stack(
         children: [
-          GraphWidget(),
+          GraphWidget(functionVariable: functionVariable),
           Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, top: 20),
-            child: FunctionTextField(),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
+            child: FunctionTextField(functionVariable: functionVariable),
           ),
         ],
       ),

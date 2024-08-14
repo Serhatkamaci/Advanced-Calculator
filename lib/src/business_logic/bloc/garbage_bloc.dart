@@ -14,9 +14,18 @@ final class AddtoGarbage extends GarbageEvent {
   });
 }
 
+final class ClearGarbage extends GarbageEvent {
+  const ClearGarbage();
+}
+
 class GarbageBloc extends Bloc<GarbageEvent, Map<String, String>> {
   GarbageBloc() : super({}) {
     on<AddtoGarbage>(addtoGarbage);
+    on<ClearGarbage>(clearGarbage);
+  }
+
+  void clearGarbage(ClearGarbage event, Emitter<Map<String, String>> emit) {
+    emit({});
   }
 
   void addtoGarbage(AddtoGarbage event, Emitter<Map<String, String>> emit) {

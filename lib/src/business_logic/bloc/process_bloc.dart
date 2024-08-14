@@ -29,10 +29,13 @@ class ProcessBloc extends Bloc<ProcessEvent, String> {
   List<String> pastProcessList = [];
 
   void equalProcess(EqualProcess event, Emitter<String> emit) {
-    emit(event.result);
+    emit(event.result + state);
   }
 
   void addtoProcess(AddtoProcess event, Emitter<String> emit) {
+    if (isEqual) {
+      emit("");
+    }
     if (event.process == "<-" &&
         !(copyPastUniqueConverterList.last == "wğ" ||
             copyPastUniqueConverterList.last == "ü")) {

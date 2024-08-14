@@ -1,36 +1,46 @@
 import 'package:advanced_calculator/src/business_logic/bloc/garbage_bloc.dart';
-import 'package:advanced_calculator/src/business_logic/bloc/general_providers.dart';
 import 'package:advanced_calculator/src/business_logic/bloc/process_bloc.dart';
 import 'package:advanced_calculator/src/model/unique_converter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 
 List<String> copyPastUniqueConverterList = [];
+bool isEqual = false;
 
 sealed class ResultEvent {
   const ResultEvent();
 }
 
-final class AddtoProcess extends ResultEvent {
+final class AddtoProcessInResult extends ResultEvent {
   final String process;
 
-  const AddtoProcess({required this.process});
+  const AddtoProcessInResult({required this.process});
 }
 
 //! showtoScreenResultValue
 class ResultBloc extends Bloc<ResultEvent, String> {
-  ResultBloc({
-    required this.garbageBloc,
-    required this.processBloc,
-  }) : super("") {
-    on<AddtoProcess>(addtoProcess);
+  ResultBloc(
+      {required this.garbageBloc,
+      required this.processBloc,
+      required this.upButtonVariable})
+      : super("0") {
+    on<AddtoProcessInResult>(addtoProcess);
   }
 
   final GarbageBloc garbageBloc;
   final ProcessBloc processBloc;
+  final ValueNotifier<bool> upButtonVariable;
   String senttoUniqueConverter = "";
   List<String> pastUniqueConverterList = [];
 
-  void addtoProcess(AddtoProcess event, Emitter<String> emit) {
+  void addtoProcess(AddtoProcessInResult event, Emitter<String> emit) {
+    if (isEqual) {
+      state != "0"
+          ? processBloc.add(EqualProcess(result: state))
+          : processBloc.add(const EqualProcess(result: ""));
+
+      isEqual = !isEqual;
+    }
     if (event.process == "()") {
       if (pastUniqueConverterList.isEmpty ||
           (int.tryParse(pastUniqueConverterList.last) == null &&
@@ -58,9 +68,9 @@ class ResultBloc extends Bloc<ResultEvent, String> {
       senttoUniqueConverter = senttoUniqueConverter.substring(0, index);
     } else if (event.process == "<-") {
       if (pastUniqueConverterList.last == "wğ") {
-        upButtonProvider.state = false;
+        upButtonVariable.value = false;
       } else if (pastUniqueConverterList.last == "ü") {
-        upButtonProvider.state = true;
+        upButtonVariable.value = true;
       }
       if (pastUniqueConverterList.isNotEmpty) {
         String lastElement = pastUniqueConverterList.last;
@@ -86,16 +96,15 @@ class ResultBloc extends Bloc<ResultEvent, String> {
       if (double.tryParse(state) != null && state != "0") {
         copyPastUniqueConverterList = state.split('');
         pastUniqueConverterList = state.split('');
-        processBloc.add(EqualProcess(result: state));
         processBloc.pastProcessList = state.split('');
         senttoUniqueConverter = state;
       } else {
         copyPastUniqueConverterList = [];
         pastUniqueConverterList = [];
-        processBloc.add(EqualProcess(result: state));
         processBloc.pastProcessList = [];
         senttoUniqueConverter = "";
       }
+      isEqual = !isEqual;
     } else if (event.process == "1/x" && senttoUniqueConverter.isNotEmpty) {
       copyPastUniqueConverterList.insertAll(0, ["1", "/", "("]);
       copyPastUniqueConverterList.add(")");
@@ -103,7 +112,7 @@ class ResultBloc extends Bloc<ResultEvent, String> {
       pastUniqueConverterList.add(")");
       senttoUniqueConverter = "1/($senttoUniqueConverter)";
     } else if (event.process == "C") {
-      upButtonProvider.state = false;
+      upButtonVariable.value = false;
       senttoUniqueConverter = "";
       emit("0");
       pastUniqueConverterList = [];

@@ -4,7 +4,17 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorPage extends StatelessWidget {
-  const CalculatorPage({super.key});
+  final ValueNotifier<ThemeMode> themeModeVariable;
+  final ValueNotifier<bool> calculatorModeVariable;
+  final ValueNotifier<bool> upButtonVariable;
+  final ValueNotifier<bool> changeButtonVariable;
+  const CalculatorPage({
+    super.key,
+    required this.themeModeVariable,
+    required this.calculatorModeVariable,
+    required this.upButtonVariable,
+    required this.changeButtonVariable,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +23,9 @@ class CalculatorPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        leading: const CalculatorModeButtonWidget(),
+        leading: CalculatorModeButtonWidget(
+          calculatorModeVariable: calculatorModeVariable,
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -39,8 +51,10 @@ class CalculatorPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: const [
-          ThemeModeButtonWidget(),
+        actions: [
+          ThemeModeButtonWidget(
+            themeModeVariable: themeModeVariable,
+          ),
         ],
       ),
       body: Container(
@@ -82,7 +96,12 @@ class CalculatorPage extends StatelessWidget {
               thickness: 2.0,
               color: Theme.of(context).colorScheme.outlineVariant,
             ),
-            ButtonsWidget(size: size),
+            ButtonsWidget(
+              size: size,
+              calculatorModeVariable: calculatorModeVariable,
+              upButtonVariable: upButtonVariable,
+              changeButtonVariable: changeButtonVariable,
+            ),
           ],
         ),
       ),
