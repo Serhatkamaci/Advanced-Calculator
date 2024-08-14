@@ -1,16 +1,11 @@
-import 'package:advanced_calculator/src/business_logic/provider/result_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
+import 'package:advanced_calculator/src/controller/result_controller.dart';
+import 'package:get/get.dart';
 
 int parenthesesCount = 0;
 
-class Process extends ChangeNotifier {
-  String procesString = "";
+class ProcessController extends GetxController {
+  var procesString = "".obs;
   List<String> pastProcessList = [];
-
-  String readtoProcess() {
-    return procesString;
-  }
 
   void addtoProcess(String process) {
     if (process == "<-" &&
@@ -19,10 +14,10 @@ class Process extends ChangeNotifier {
       if (pastProcessList.isNotEmpty) {
         String lastElement = pastProcessList.last;
         pastProcessList.removeLast();
-        int index = procesString.lastIndexOf(lastElement);
-        procesString = procesString.substring(0, index);
+        int index = procesString.value.lastIndexOf(lastElement);
+        procesString.value = procesString.value.substring(0, index);
       } else {
-        procesString = "";
+        procesString.value = "";
       }
       if (copyPastUniqueConverterList.last == "(") {
         parenthesesCount -= 1;
@@ -34,27 +29,24 @@ class Process extends ChangeNotifier {
           (int.tryParse(pastProcessList.last) == null &&
               pastProcessList.last != ")")) {
         pastProcessList.add("(");
-        procesString += "(";
+        procesString.value += "(";
         parenthesesCount++;
       } else if (parenthesesCount != 0 && pastProcessList.last != "(") {
         pastProcessList.add(")");
-        procesString += ")";
+        procesString.value += ")";
         parenthesesCount--;
       }
     } else if (process == "1/x" && procesString.isNotEmpty) {
-      procesString = "1\u00F7($procesString)";
+      procesString.value = "1\u00F7($procesString)";
       pastProcessList.insertAll(0, ["1", "/", "("]);
       pastProcessList.add(")");
     } else if (process == "C") {
-      procesString = "";
+      procesString.value = "";
       pastProcessList = [];
       parenthesesCount = 0;
     } else if (process != "<-") {
       pastProcessList.add(process);
-      procesString += process;
+      procesString.value += process;
     }
-    notifyListeners();
   }
 }
-
-final processProvider = ChangeNotifierProvider((ref) => Process());

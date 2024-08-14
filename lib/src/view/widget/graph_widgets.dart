@@ -1,23 +1,22 @@
 import 'package:advanced_calculator/core/button_styles.dart';
-import 'package:advanced_calculator/src/business_logic/provider/general_providers.dart';
+import 'package:advanced_calculator/src/controller/general_variable.dart';
 import 'package:advanced_calculator/src/model/graph_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-class FunctionTextField extends ConsumerWidget {
+class FunctionTextField extends StatelessWidget {
   const FunctionTextField({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return TextField(
       onChanged: (value) {
-        ref.read(functionProvider.notifier).state = value;
+        functionVariable.value = value;
       },
       decoration: InputDecoration(
         filled: true,
@@ -70,46 +69,50 @@ class InfoDiaogWidget extends StatelessWidget {
 
 //------------------------------------------------------------------------------
 
-class GraphWidget extends ConsumerWidget {
+class GraphWidget extends StatelessWidget {
   const GraphWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: SfCartesianChart(
-        plotAreaBorderWidth: 0,
-        zoomPanBehavior: ZoomPanBehavior(
-          maximumZoomLevel: 0.5,
-          enablePanning: true,
-          enablePinching: true,
-          enableSelectionZooming: true,
-        ),
-        primaryXAxis: const NumericAxis(
-          minimum: -10,
-          maximum: 10,
-          interval: 2,
-          crossesAt: 0,
-          minorTicksPerInterval: 4,
-        ),
-        primaryYAxis: const NumericAxis(
-          minimum: -10,
-          maximum: 10,
-          interval: 2,
-          crossesAt: 0,
-          minorTicksPerInterval: 4,
-        ),
-        series: <LineSeries>[
-          LineSeries<ChartData, num>(
-            dataSource: GraphDrawer.generateData(ref.watch(functionProvider)),
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.y,
-            color: Theme.of(context).colorScheme.primary,
-            width: 4,
+  Widget build(BuildContext context) {
+    return Obx(
+      () {
+        return Center(
+          child: SfCartesianChart(
+            plotAreaBorderWidth: 0,
+            zoomPanBehavior: ZoomPanBehavior(
+              maximumZoomLevel: 0.5,
+              enablePanning: true,
+              enablePinching: true,
+              enableSelectionZooming: true,
+            ),
+            primaryXAxis: const NumericAxis(
+              minimum: -10,
+              maximum: 10,
+              interval: 2,
+              crossesAt: 0,
+              minorTicksPerInterval: 4,
+            ),
+            primaryYAxis: const NumericAxis(
+              minimum: -10,
+              maximum: 10,
+              interval: 2,
+              crossesAt: 0,
+              minorTicksPerInterval: 4,
+            ),
+            series: <LineSeries>[
+              LineSeries<ChartData, num>(
+                dataSource: GraphDrawer.generateData(functionVariable.value),
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                color: Theme.of(context).colorScheme.primary,
+                width: 4,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
