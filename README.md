@@ -10,14 +10,14 @@ The main features of the project are as follows:
 
 ## App Screenshot:
 <p align="center">
-  <img hspace="5" src="https://github.com/user-attachments/assets/37753bb5-1cac-4192-b2f5-9405392fcc9c">
-  <img hspace="5" src="https://github.com/user-attachments/assets/5ce54d78-75d6-4bc2-9d05-b6f223a44826">
-  <img hspace="5" src="https://github.com/user-attachments/assets/4b0801de-12ec-468e-9aed-441f93814d43">
+  <img hspace="20" src="https://github.com/user-attachments/assets/37753bb5-1cac-4192-b2f5-9405392fcc9c">
+  <img hspace="20" src="https://github.com/user-attachments/assets/5ce54d78-75d6-4bc2-9d05-b6f223a44826">
+  <img hspace="20" src="https://github.com/user-attachments/assets/4b0801de-12ec-468e-9aed-441f93814d43">
 <p>
 <p align="center">
-  <img hspace="5" src="https://github.com/user-attachments/assets/616e7c07-e3b5-495f-8442-0bcdedb32181">
-  <img hspace="5" src="https://github.com/user-attachments/assets/277cbc6c-f48c-40cd-8d4b-a1df09d722a0">
-  <img hspace="5" src="https://github.com/user-attachments/assets/fa283e8c-fb8d-4489-a332-ceddf9f6ce8b">
+  <img hspace="20" src="https://github.com/user-attachments/assets/616e7c07-e3b5-495f-8442-0bcdedb32181">
+  <img hspace="20" src="https://github.com/user-attachments/assets/277cbc6c-f48c-40cd-8d4b-a1df09d722a0">
+  <img hspace="20" src="https://github.com/user-attachments/assets/fa283e8c-fb8d-4489-a332-ceddf9f6ce8b">
 <p>
 
 ## Branches:
